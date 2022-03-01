@@ -103,9 +103,18 @@ describe("CrossChainWarriors tests", () => {
       await (
         await crossChainWarriorsContract.mintId(deployerAddress, id)
       ).wait();
+
+      expect(await crossChainWarriorsContract.ownerOf(id)).to.equal(
+        deployerAddress
+      );
+
       await (
         await crossChainWarriorsContract.crossChainTransfer(account1Address, id)
       ).wait();
+
+      expect(crossChainWarriorsContract.ownerOf(id)).to.be.revertedWith(
+        "ERC721: owner query for nonexistent token"
+      );
     });
   });
 });
