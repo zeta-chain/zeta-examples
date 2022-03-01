@@ -94,10 +94,10 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
         _zetaMpi.zetaMessageSend(
             _crossChainID,
             abi.encode(_crossChainAddress),
-            0, // @todo (lucas): check if this is ok
-            2500000, // @todo (lucas): check if this is ok
+            0,
+            2500000,
             abi.encode(CROSS_CHAIN_TRANSFER_MESSAGE, tokenId, msg.sender, to),
-            abi.encode("") // @todo (lucas): check if this is ok
+            abi.encode("")
         );
     }
 
