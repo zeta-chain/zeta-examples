@@ -47,8 +47,11 @@ export const deployCrossChainWarriorsMock = async ({
   return crossChainWarriorsContract;
 };
 
-export const deployCrossChainWarriors = async () => {
-  assert(isNetworkName(network.name), "Invalid network name");
+export const getCrossChainWarriors = async (
+  existingContractAddress?: string
+) => {
+  if (!isNetworkName(network.name)) throw new Error("Invalid network name");
+  const isGetExistingContract = typeof existingContractAddress !== "undefined";
 
   const _networkVariables = networkVariables[network.name];
 
@@ -56,8 +59,13 @@ export const deployCrossChainWarriors = async () => {
     "CrossChainWarriors"
   )) as CrossChainWarriorsFactory;
 
+  if (isGetExistingContract) {
+    return Factory.attach(existingContractAddress) as CrossChainWarriors;
+  }
+
   const useEven = network.name === "goerli";
 
+  console.log("Deploying Cross Chain Warriors");
   const crossChainWarriorsContract = (await Factory.deploy(
     _networkVariables.MPI_ADDRESS,
     _networkVariables.ZETA_TOKEN_ADDRESS,

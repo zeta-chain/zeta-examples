@@ -24,6 +24,10 @@ const config: HardhatUserConfig = {
     // @todo (lucas): set goerli
     // goerli: {
     // },
+
+    hardhat: {
+      chainId: 1337,
+    },
   },
   gasReporter: {
     enabled: process.env.REPORT_GAS !== undefined,

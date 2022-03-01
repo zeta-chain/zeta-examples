@@ -1,0 +1,11 @@
+{
+  "bsctestnet": {
+    "crossChainWarriorsAddress": "0x0000000000000000000000000000000000000000"
+  },
+  "goerli": {
+    "crossChainWarriorsAddress": "0x0000000000000000000000000000000000000000"
+  },
+  "hardhat": {
+    "crossChainWarriorsAddress": "0x0000000000000000000000000000000000000000"
+  }
+}
