@@ -13,66 +13,61 @@ import {
   networkVariables,
 } from "./CrossChainWarriors.constants";
 
-export const deployCrossChainWarriors = async <
-  GetMockInstance extends boolean
->({
+/**
+ * @description only for testing or local environment
+ */
+export const deployCrossChainWarriorsMock = async ({
   customUseEven,
-  getMockInstance,
   zetaMPIMockAddress,
 }: {
-  /**
-   * @description only for testing
-   */
-  customUseEven?: boolean;
-  /**
-   * @description only for testing
-   */
-  getMockInstance?: GetMockInstance;
-  /**
-   * @description only for testing
-   */
-  zetaMPIMockAddress?: string;
-} = {}): Promise<
-  GetMockInstance extends true
-    ? Promise<CrossChainWarriorsMock>
-    : Promise<CrossChainWarriors>
-> => {
+  customUseEven: boolean;
+  zetaMPIMockAddress: string;
+}) => {
   const isLocalEnvironment = network.name === "hardhat";
 
-  assert(isNetworkName(network.name), "Invalid network name");
   assert(
-    isLocalEnvironment || typeof customUseEven === "undefined",
-    "customUseEven is only intended to be used in local network"
+    isLocalEnvironment,
+    "localDeployCrossChainWarriors is only intended to be used in the local environment"
   );
-  assert(
-    isLocalEnvironment || typeof getMockInstance === "undefined",
-    "getMockInstance is only intended to be used in local network"
-  );
-  assert(
-    isLocalEnvironment || typeof zetaMPIMockAddress === "undefined",
-    "zetaMPIMockAddress is only intended to be used in local network"
-  );
-
-  const _networkVariables = networkVariables[network.name];
 
   const Factory = (await ethers.getContractFactory(
-    getMockInstance ? "CrossChainWarriorsMock" : "CrossChainWarriors"
-  )) as CrossChainWarriorsFactory | CrossChainWarriorsMockFactory;
+    "CrossChainWarriorsMock"
+  )) as CrossChainWarriorsMockFactory;
 
-  const useEven = customUseEven ?? network.name === "goerli";
+  const useEven = customUseEven;
 
   const crossChainWarriorsContract = (await Factory.deploy(
-    zetaMPIMockAddress || _networkVariables.MPI_ADDRESS,
-    _networkVariables.ZETA_TOKEN_ADDRESS,
+    zetaMPIMockAddress,
+    zetaMPIMockAddress, // @todo (lucas): replace this for zeta token (or remove zeta token from the constructor)
     useEven
-  )) as CrossChainWarriors | CrossChainWarriorsMock;
+  )) as CrossChainWarriorsMock;
 
   await crossChainWarriorsContract.deployed();
 
   return crossChainWarriorsContract;
 };
 
-export const a = () => {};
+export const deployCrossChainWarriors = async () => {
+  assert(isNetworkName(network.name), "Invalid network name");
+
+  const _networkVariables = networkVariables[network.name];
+
+  const Factory = (await ethers.getContractFactory(
+    "CrossChainWarriors"
+  )) as CrossChainWarriorsFactory;
+
+  const useEven = network.name === "goerli";
+
+  const crossChainWarriorsContract = (await Factory.deploy(
+    _networkVariables.MPI_ADDRESS,
+    _networkVariables.ZETA_TOKEN_ADDRESS,
+    useEven
+  )) as CrossChainWarriors;
+
+  await crossChainWarriorsContract.deployed();
+
+  return crossChainWarriorsContract;
+};
 
 export const deployZetaMPIMock = async () => {
   const Factory = (await ethers.getContractFactory(

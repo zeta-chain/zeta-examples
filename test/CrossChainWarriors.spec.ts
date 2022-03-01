@@ -2,7 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import {
-  deployCrossChainWarriors,
+  deployCrossChainWarriorsMock,
   deployZetaMPIMock,
 } from "../lib/CrossChainWarriors.helpers";
 import { CrossChainWarriorsMock, ZetaMPIMock } from "../typechain";
@@ -20,14 +20,12 @@ describe("CrossChainWarriors tests", () => {
 
   beforeEach(async () => {
     zetaMPIMockContract = await deployZetaMPIMock();
-    crossChainWarriorsContract = await deployCrossChainWarriors({
+    crossChainWarriorsContract = await deployCrossChainWarriorsMock({
       customUseEven: false,
-      getMockInstance: true,
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
-    useEvenCrossChainWarriorsContract = await deployCrossChainWarriors({
+    useEvenCrossChainWarriorsContract = await deployCrossChainWarriorsMock({
       customUseEven: true,
-      getMockInstance: true,
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
 
