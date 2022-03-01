@@ -1,5 +1,5 @@
 import { writeFileSync } from "fs";
-import { network } from "hardhat";
+import { ethers, network } from "hardhat";
 import { join } from "path";
 import {
   getAddressConstants,
@@ -29,15 +29,21 @@ async function main() {
 
   const crossChainWarriorsContract = await getCrossChainWarriors();
 
+  console.log("Setting base URI");
   (
     await crossChainWarriorsContract.setBaseURI(
       "https://gateway.pinata.cloud/ipfs/QmNRP9kZ2SJXnFnxwvhQbxQHQuXVWVive3JkCNgG6315iH/"
     )
   ).wait();
 
+  const [deployer] = await ethers.getSigners();
+
+  console.log("Minting");
+  await crossChainWarriorsContract.mint(deployer.address);
+
   if (network.name === "hardhat") {
     const filename = "../addressConstants.local.json";
-    console.log("Creating", filename);
+    console.log("Updating", filename);
 
     addressConstants.hardhat.crossChainWarriorsAddress =
       crossChainWarriorsContract.address;
@@ -48,7 +54,7 @@ async function main() {
     );
   } else if (network.name === "bsctestnet") {
     const filename = "../addressConstants.testnet.json";
-    console.log("Creating", filename);
+    console.log("Updating", filename);
 
     addressConstants.bsctestnet.crossChainWarriorsAddress =
       crossChainWarriorsContract.address;
@@ -59,7 +65,7 @@ async function main() {
     );
   } else if (network.name === "goerli") {
     const filename = "../addressConstants.testnet.json";
-    console.log("Creating", filename);
+    console.log("Updating", filename);
 
     addressConstants.goerli.crossChainWarriorsAddress =
       crossChainWarriorsContract.address;

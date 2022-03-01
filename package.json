@@ -1,5 +1,6 @@
 {
   "name": "hardhat-project",
+  "license": "MIT",
   "scripts": {
     "test": "npx hardhat test",
     "test:watch": "echo You need to install `entr` to run this command && find contracts test -iname '*.sol' -o -iname '*.spec.ts' | entr -cnr npx hardhat test",
