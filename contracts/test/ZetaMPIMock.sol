@@ -15,13 +15,35 @@ contract ZetaMPIMock is ZetaMPI {
         return CrossChainWarriors(destContract).uponZetaMessage(sender, srcChainID, destContract, zetaAmount, message);
     }
 
+    function callZetaMessageRevert(
+        bytes memory sender,
+        uint16, // srcChainID
+        address, // destContract
+        uint256 zetaAmount,
+        uint256 gasLimit,
+        bytes calldata message
+    ) public {
+        address _sender = abi.decode(sender, (address));
+
+        return
+            CrossChainWarriors(_sender).zetaMessageRevert(
+                _sender,
+                "1", // @todo (lucas): unmock
+                "", // @todo (lucas): unmock
+                zetaAmount,
+                gasLimit,
+                message,
+                "123"
+            );
+    }
+
     function zetaMessageSend(
         uint16 destChainID,
         bytes memory destContract,
         uint256 zetaAmount,
-        uint256 gasLimit,
+        uint256, // gasLimit
         bytes calldata message,
-        bytes calldata zetaParams
+        bytes calldata // zetaParams
     ) external {
         uint16 srcChainID = destChainID == 2 ? 1 : 2;
         address dest = abi.decode(destContract, (address));

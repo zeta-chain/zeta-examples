@@ -95,7 +95,7 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
             abi.encode(_crossChainAddress),
             0, // @todo (lucas): check if this is ok
             2500000, // @todo (lucas): check if this is ok
-            abi.encode(CROSS_CHAIN_TRANSFER_MESSAGE, tokenId, to),
+            abi.encode(CROSS_CHAIN_TRANSFER_MESSAGE, tokenId, msg.sender, to),
             abi.encode("") // @todo (lucas): check if this is ok
         );
     }
@@ -103,15 +103,20 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
     function uponZetaMessage(
         bytes calldata sender,
         uint16 srcChainID,
-        address destContract,
-        uint256 zetaAmount,
+        address, // destContract
+        uint256, // zetaAmount
         bytes calldata message
     ) external {
         require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
         require(abi.decode(sender, (address)) == _crossChainAddress, "Cross-chain address doesn't match");
         require(srcChainID == _crossChainID, "Cross-chain id doesn't match");
 
-        (bytes32 messageType, uint256 tokenId, address to) = abi.decode(message, (bytes32, uint256, address));
+        (
+            bytes32 messageType,
+            uint256 tokenId, /* address from */
+            ,
+            address to
+        ) = abi.decode(message, (bytes32, uint256, address, address));
 
         require(messageType == CROSS_CHAIN_TRANSFER_MESSAGE, "Invalid message type");
 
@@ -119,14 +124,20 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
     }
 
     function zetaMessageRevert(
-        address sender,
-        string calldata destChainID,
-        string calldata destContract,
-        uint256 zetaRefundAmount,
-        uint256 gasLimit,
+        address, // sender,
+        string calldata, // destChainID,
+        string calldata, // destContract,
+        uint256, // zetaRefundAmount,
+        uint256, // gasLimit,
         bytes calldata message,
-        bytes32 messageID
+        bytes32 // messageID
     ) external {
         require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
+
+        (bytes32 messageType, uint256 tokenId, address from) = abi.decode(message, (bytes32, uint256, address));
+
+        require(messageType == CROSS_CHAIN_TRANSFER_MESSAGE, "Invalid message type");
+
+        _mintId(from, tokenId);
     }
 }

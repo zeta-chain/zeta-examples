@@ -220,8 +220,8 @@ describe("CrossChainWarriors tests", () => {
           crossChainWarriorsContractChainB.address,
           0,
           encoder.encode(
-            ["bytes32", "uint256 ", "address"],
-            [invalidMessageType, 1, deployerAddress]
+            ["bytes32", "uint256 ", "address", "address"],
+            [invalidMessageType, 1, deployerAddress, deployerAddress]
           )
         )
       ).to.be.revertedWith("Invalid message type");
@@ -243,8 +243,8 @@ describe("CrossChainWarriors tests", () => {
           crossChainWarriorsContractChainB.address,
           0,
           encoder.encode(
-            ["bytes32", "uint256 ", "address"],
-            [messageType, 1, deployerAddress]
+            ["bytes32", "uint256 ", "address", "address"],
+            [messageType, 1, deployerAddress, deployerAddress]
           )
         )
       ).to.be.revertedWith("ERC721: token already minted");
@@ -264,8 +264,8 @@ describe("CrossChainWarriors tests", () => {
           crossChainWarriorsContractChainB.address,
           0,
           encoder.encode(
-            ["bytes32", "uint256 ", "address"],
-            [messageType, 1, deployerAddress]
+            ["bytes32", "uint256 ", "address", "address"],
+            [messageType, 1, deployerAddress, deployerAddress]
           )
         );
 
@@ -273,6 +273,74 @@ describe("CrossChainWarriors tests", () => {
           deployerAddress
         );
       });
+
+      it("Should mint a new token in the destination chain, owned by the provided 'to' address", async () => {
+        const messageType =
+          await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
+
+        await zetaMPIMockContract.callUponZetaMessage(
+          encoder.encode(
+            ["address"],
+            [crossChainWarriorsContractChainA.address]
+          ),
+          1,
+          crossChainWarriorsContractChainB.address,
+          0,
+          encoder.encode(
+            ["bytes32", "uint256 ", "address", "address"],
+            [messageType, 1, deployerAddress, account1Address]
+          )
+        );
+
+        expect(await crossChainWarriorsContractChainB.ownerOf(1)).to.equal(
+          account1Address
+        );
+      });
+    });
+  });
+
+  describe("zetaMessageRevert", () => {
+    /**
+     * @description note that given how this test was implemented, the NFT will exist in the two chains
+     * that's not the real-world behavior but it's ok for this unit test
+     */
+    it("Should give back the NFT to the sender", async () => {
+      const nftId = 1;
+
+      await (
+        await crossChainWarriorsContractChainA.mintId(deployerAddress, nftId)
+      ).wait();
+
+      await (
+        await crossChainWarriorsContractChainA.crossChainTransfer(
+          deployerAddress,
+          nftId
+        )
+      ).wait();
+
+      // Make sure that the NFT was removed from the origin chain
+      await expect(
+        crossChainWarriorsContractChainA.ownerOf(nftId)
+      ).to.be.revertedWith("ERC721: owner query for nonexistent token");
+
+      const messageType =
+        await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
+
+      await zetaMPIMockContract.callZetaMessageRevert(
+        encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
+        1,
+        crossChainWarriorsContractChainB.address,
+        0,
+        2500000,
+        encoder.encode(
+          ["bytes32", "uint256 ", "address", "address"],
+          [messageType, nftId, deployerAddress, account1Address]
+        )
+      );
+
+      expect(await crossChainWarriorsContractChainB.ownerOf(nftId)).to.equal(
+        deployerAddress
+      );
     });
   });
 });
