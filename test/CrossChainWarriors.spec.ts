@@ -39,11 +39,11 @@ describe("CrossChainWarriors tests", () => {
     });
     await crossChainWarriorsContractChainB.setCrossChainID(chainAID);
     await crossChainWarriorsContractChainB.setCrossChainAddress(
-      crossChainWarriorsContractChainA.address
+      encoder.encode(["address"], [crossChainWarriorsContractChainA.address])
     );
 
     await crossChainWarriorsContractChainA.setCrossChainAddress(
-      crossChainWarriorsContractChainB.address
+      encoder.encode(["address"], [crossChainWarriorsContractChainB.address])
     );
 
     accounts = await ethers.getSigners();
