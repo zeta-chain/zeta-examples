@@ -92,11 +92,11 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
 
         _zetaMpi.zetaMessageSend(
             _crossChainID,
-            abi.encodePacked(_crossChainAddress),
+            abi.encode(_crossChainAddress),
             0, // @todo (lucas): check if this is ok
-            100, // @todo (lucas): set gas limit
-            abi.encodePacked(CROSS_CHAIN_TRANSFER_MESSAGE, tokenId, to),
-            abi.encodePacked("") // @todo (lucas): check if this is ok
+            2500000, // @todo (lucas): check if this is ok
+            abi.encode(CROSS_CHAIN_TRANSFER_MESSAGE, tokenId, to),
+            abi.encode("") // @todo (lucas): check if this is ok
         );
     }
 
@@ -107,14 +107,13 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
         uint256 zetaAmount,
         bytes calldata message
     ) external {
-        require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MP contract");
+        require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
         require(abi.decode(sender, (address)) == _crossChainAddress, "Cross-chain address doesn't match");
         require(srcChainID == _crossChainID, "Cross-chain id doesn't match");
 
         (bytes32 messageType, uint256 tokenId, address to) = abi.decode(message, (bytes32, uint256, address));
 
         require(messageType == CROSS_CHAIN_TRANSFER_MESSAGE, "Invalid message type");
-        require(!_exists(tokenId), "tokenId already exists");
 
         _mintId(to, tokenId);
     }
@@ -128,6 +127,6 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
         bytes calldata message,
         bytes32 messageID
     ) external {
-        require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MP contract");
+        require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
     }
 }
