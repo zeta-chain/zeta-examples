@@ -11,13 +11,13 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
-    bytes32 public constant CROSS_CHAIN_TRANSFER_MESSAGE =
-        keccak256("CROSS_CHAIN_TRANSFER");
+    bytes32 public constant CROSS_CHAIN_TRANSFER_MESSAGE = keccak256("CROSS_CHAIN_TRANSFER");
 
     address internal _crossChainAddress;
 
     uint16 internal _crossChainID;
 
+    address internal _zetaMpiAddress;
     ZetaMPI internal _zetaMpi;
 
     IERC20 internal _zetaToken;
@@ -27,11 +27,12 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
     Counters.Counter public tokenIds;
 
     constructor(
-        address _zetaMpiAddress,
+        address _zetaMpiInputAddress,
         address _zetaTokenAddress,
         bool useEven
     ) {
-        _zetaMpi = ZetaMPI(_zetaMpiAddress);
+        _zetaMpiAddress = _zetaMpiInputAddress;
+        _zetaMpi = ZetaMPI(_zetaMpiInputAddress);
         _zetaToken = IERC20(_zetaTokenAddress);
 
         /**
@@ -72,11 +73,11 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
         return newWarriorId;
     }
 
-    function mintId(address to, uint256 tokenId) internal {
+    function _mintId(address to, uint256 tokenId) internal {
         _safeMint(to, tokenId);
     }
 
-    function burn(uint256 burnedWarriorId) internal {
+    function _burnWarrior(uint256 burnedWarriorId) internal {
         _burn(burnedWarriorId);
     }
 
@@ -85,12 +86,9 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
      */
 
     function crossChainTransfer(address to, uint256 tokenId) external {
-        require(
-            _isApprovedOrOwner(_msgSender(), tokenId),
-            "Transfer caller is not owner nor approved"
-        );
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "Transfer caller is not owner nor approved");
 
-        burn(tokenId);
+        _burnWarrior(tokenId);
 
         _zetaMpi.zetaMessageSend(
             _crossChainID,
@@ -109,24 +107,16 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
         uint256 zetaAmount,
         bytes calldata message
     ) external {
-        require(
-            abi.decode(sender, (address)) == _crossChainAddress,
-            "Cross-chain address doesn't match"
-        );
+        require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MP contract");
+        require(abi.decode(sender, (address)) == _crossChainAddress, "Cross-chain address doesn't match");
         require(srcChainID == _crossChainID, "Cross-chain id doesn't match");
 
-        (bytes32 messageType, uint256 tokenId, address to) = abi.decode(
-            message,
-            (bytes32, uint256, address)
-        );
+        (bytes32 messageType, uint256 tokenId, address to) = abi.decode(message, (bytes32, uint256, address));
 
-        require(
-            messageType == CROSS_CHAIN_TRANSFER_MESSAGE,
-            "Invalid message type"
-        );
+        require(messageType == CROSS_CHAIN_TRANSFER_MESSAGE, "Invalid message type");
         require(!_exists(tokenId), "tokenId already exists");
 
-        mintId(to, tokenId);
+        _mintId(to, tokenId);
     }
 
     function zetaMessageRevert(
@@ -138,6 +128,6 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
         bytes calldata message,
         bytes32 messageID
     ) external {
-        require(true, "True");
+        require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MP contract");
     }
 }
