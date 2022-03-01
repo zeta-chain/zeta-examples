@@ -21,9 +21,11 @@ const config: HardhatUserConfig = {
       gasPrice: 30000000000,
     },
 
-    // @todo (lucas): set goerli
-    // goerli: {
-    // },
+    goerli: {
+      url: `https://rpc.goerli.mudit.blog/`,
+      accounts: PRIVATE_KEYS,
+      gasPrice: 30000000000,
+    },
 
     hardhat: {
       chainId: 1337,
