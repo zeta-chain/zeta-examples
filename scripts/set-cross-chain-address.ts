@@ -12,11 +12,17 @@ async function main() {
   const addressConstants = getAddressConstants();
   const _networkVariables = networkVariables[network.name];
 
-  const crossChainWarriorsContract = getCrossChainWarriors(
+  const crossChainWarriorsContract = await getCrossChainWarriors(
     addressConstants[network.name].crossChainWarriorsAddress
   );
 
-  // const crossChainWarriorsAddress = _networkVariables.crossChainName
+  const crossChainAddress =
+    addressConstants[_networkVariables.crossChainName]
+      .crossChainWarriorsAddress;
+
+  (
+    await crossChainWarriorsContract.setCrossChainAddress(crossChainAddress)
+  ).wait();
 }
 
 main().catch((error) => {

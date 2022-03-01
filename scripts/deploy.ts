@@ -27,14 +27,20 @@ async function main() {
     },
   };
 
-  const crossChainWarriorsAddress = await getCrossChainWarriors();
+  const crossChainWarriorsContract = await getCrossChainWarriors();
+
+  (
+    await crossChainWarriorsContract.setBaseURI(
+      "https://gateway.pinata.cloud/ipfs/QmNRP9kZ2SJXnFnxwvhQbxQHQuXVWVive3JkCNgG6315iH/"
+    )
+  ).wait();
 
   if (network.name === "hardhat") {
     const filename = "../addressConstants.local.json";
     console.log("Creating", filename);
 
     addressConstants.hardhat.crossChainWarriorsAddress =
-      crossChainWarriorsAddress.address;
+      crossChainWarriorsContract.address;
 
     writeFileSync(
       join(__dirname, filename),
@@ -45,7 +51,7 @@ async function main() {
     console.log("Creating", filename);
 
     addressConstants.bsctestnet.crossChainWarriorsAddress =
-      crossChainWarriorsAddress.address;
+      crossChainWarriorsContract.address;
 
     writeFileSync(
       join(__dirname, filename),
@@ -56,7 +62,7 @@ async function main() {
     console.log("Creating", filename);
 
     addressConstants.goerli.crossChainWarriorsAddress =
-      crossChainWarriorsAddress.address;
+      crossChainWarriorsContract.address;
 
     writeFileSync(
       join(__dirname, filename),
