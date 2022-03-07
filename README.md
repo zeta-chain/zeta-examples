@@ -29,19 +29,19 @@ Follow the template in `.env.example`.
 After setting your environment variables, run the following commands to deploy (order matters):
 
 ```bash
-  npx hardhat run scripts/deploy.ts --network bsctestnet
+  yarn hardhat run scripts/deploy.ts --network bsctestnet
 ```
 
 ```bash
-  npx hardhat run scripts/deploy.ts --network goerli
+  yarn hardhat run scripts/deploy.ts --network goerli
 ```
 
 ```bash
-  npx hardhat run scripts/scripts/set-cross-chain-data.ts --network bsctestnet
+  yarn hardhat run scripts/scripts/set-cross-chain-data.ts --network bsctestnet
 ```
 
 ```bash
-  npx hardhat run scripts/scripts/set-cross-chain-data.ts --network goerli
+  yarn hardhat run scripts/scripts/set-cross-chain-data.ts --network goerli
 ```
 
 ## Running Tests

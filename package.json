@@ -8,7 +8,7 @@
     "lint:js:fix": "eslint --ignore-path .gitignore --ext .js,.ts . --fix",
     "lint:sol": "solhint 'contracts/**/*.sol' && prettier -c 'contracts/**/*.sol'",
     "lint:sol:fix": "prettier --write \"contracts/**/*.sol\"",
-    "test": "npx hardhat test",
+    "test": "yarn hardhat test",
     "test:watch": "echo You need to install `entr` to run this command && find contracts test -iname '*.sol' -o -iname '*.spec.ts' | entr -cnr npx hardhat test",
     "tsc:watch": "tsc --watch"
   },
