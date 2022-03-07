@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
-import "../shared/ZetaMPI.sol";
-import "../shared/CrossChainWarriors.sol";
+import "../../shared/ZetaMPI.sol";
+import "../CrossChainWarriors.sol";
 
-contract ZetaMPIMock is ZetaMPI {
+contract CrossChainWarriorsZetaMPIMock is ZetaMPI {
     function callUponZetaMessage(
         bytes memory sender,
         uint16 srcChainID,
@@ -25,16 +25,7 @@ contract ZetaMPIMock is ZetaMPI {
     ) public {
         address _sender = abi.decode(sender, (address));
 
-        return
-            CrossChainWarriors(_sender).zetaMessageRevert(
-                _sender,
-                "1", // @todo (lucas): unmock
-                "", // @todo (lucas): unmock
-                zetaAmount,
-                gasLimit,
-                message,
-                "123"
-            );
+        return CrossChainWarriors(_sender).zetaMessageRevert(_sender, "1", "", zetaAmount, gasLimit, message, "123");
     }
 
     function zetaMessageSend(

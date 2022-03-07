@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
-import "../shared/CrossChainWarriors.sol";
+import "../CrossChainWarriors.sol";
 
 contract CrossChainWarriorsMock is CrossChainWarriors {
     constructor(

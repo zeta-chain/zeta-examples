@@ -5,8 +5,8 @@ import {
   CrossChainWarriorsMock,
   CrossChainWarriorsMock__factory as CrossChainWarriorsMockFactory,
   CrossChainWarriors__factory as CrossChainWarriorsFactory,
-  ZetaMPIMock,
-  ZetaMPIMock__factory as ZetaMPIMockFactory,
+  CrossChainWarriorsZetaMPIMock,
+  CrossChainWarriorsZetaMPIMock__factory as CrossChainWarriorsZetaMPIMockFactory,
 } from "../typechain";
 import { isNetworkName, networkVariables } from "./CrossChainWarriors.constants";
 
@@ -16,9 +16,14 @@ import { isNetworkName, networkVariables } from "./CrossChainWarriors.constants"
 export const deployCrossChainWarriorsMock = async ({
   customUseEven,
   zetaMPIMockAddress,
+  /**
+   * @description this one is not being used
+   */
+  zetaTokenMockAddress = "0x0000000000000000000000000000000000000000",
 }: {
   customUseEven: boolean;
   zetaMPIMockAddress: string;
+  zetaTokenMockAddress?: string;
 }) => {
   const isLocalEnvironment = network.name === "hardhat";
 
@@ -30,7 +35,7 @@ export const deployCrossChainWarriorsMock = async ({
 
   const crossChainWarriorsContract = (await Factory.deploy(
     zetaMPIMockAddress,
-    zetaMPIMockAddress, // @todo (lucas): replace this for zeta token (or remove zeta token from the constructor)
+    zetaTokenMockAddress,
     useEven
   )) as CrossChainWarriorsMock;
 
@@ -67,9 +72,11 @@ export const getCrossChainWarriors = async (existingContractAddress?: string) =>
 };
 
 export const deployZetaMPIMock = async () => {
-  const Factory = (await ethers.getContractFactory("ZetaMPIMock")) as ZetaMPIMockFactory;
+  const Factory = (await ethers.getContractFactory(
+    "CrossChainWarriorsZetaMPIMock"
+  )) as CrossChainWarriorsZetaMPIMockFactory;
 
-  const zetaMPIMockContract = (await Factory.deploy()) as ZetaMPIMock;
+  const zetaMPIMockContract = (await Factory.deploy()) as CrossChainWarriorsZetaMPIMock;
 
   await zetaMPIMockContract.deployed();
 

@@ -2,11 +2,11 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { deployCrossChainWarriorsMock, deployZetaMPIMock } from "../lib/CrossChainWarriors.helpers";
-import { CrossChainWarriorsMock, ZetaMPIMock } from "../typechain";
+import { CrossChainWarriorsMock, CrossChainWarriorsZetaMPIMock } from "../typechain";
 import { getMintTokenId } from "./test.helpers";
 
 describe("CrossChainWarriors tests", () => {
-  let zetaMPIMockContract: ZetaMPIMock;
+  let zetaMPIMockContract: CrossChainWarriorsZetaMPIMock;
 
   let crossChainWarriorsContractChainA: CrossChainWarriorsMock;
   const chainAID = 1;
