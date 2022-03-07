@@ -8,10 +8,7 @@ import {
   ZetaMPIMock,
   ZetaMPIMock__factory as ZetaMPIMockFactory,
 } from "../typechain";
-import {
-  isNetworkName,
-  networkVariables,
-} from "./CrossChainWarriors.constants";
+import { isNetworkName, networkVariables } from "./CrossChainWarriors.constants";
 
 /**
  * @description only for testing or local environment
@@ -25,14 +22,9 @@ export const deployCrossChainWarriorsMock = async ({
 }) => {
   const isLocalEnvironment = network.name === "hardhat";
 
-  assert(
-    isLocalEnvironment,
-    "localDeployCrossChainWarriors is only intended to be used in the local environment"
-  );
+  assert(isLocalEnvironment, "localDeployCrossChainWarriors is only intended to be used in the local environment");
 
-  const Factory = (await ethers.getContractFactory(
-    "CrossChainWarriorsMock"
-  )) as CrossChainWarriorsMockFactory;
+  const Factory = (await ethers.getContractFactory("CrossChainWarriorsMock")) as CrossChainWarriorsMockFactory;
 
   const useEven = customUseEven;
 
@@ -47,19 +39,16 @@ export const deployCrossChainWarriorsMock = async ({
   return crossChainWarriorsContract;
 };
 
-export const getCrossChainWarriors = async (
-  existingContractAddress?: string
-) => {
+export const getCrossChainWarriors = async (existingContractAddress?: string) => {
   if (!isNetworkName(network.name)) throw new Error("Invalid network name");
   const isGetExistingContract = typeof existingContractAddress !== "undefined";
 
   const _networkVariables = networkVariables[network.name];
 
-  const Factory = (await ethers.getContractFactory(
-    "CrossChainWarriors"
-  )) as CrossChainWarriorsFactory;
+  const Factory = (await ethers.getContractFactory("CrossChainWarriors")) as CrossChainWarriorsFactory;
 
   if (isGetExistingContract) {
+    console.log("Getting existing Cross Chain Warriors");
     return Factory.attach(existingContractAddress) as CrossChainWarriors;
   }
 
@@ -78,9 +67,7 @@ export const getCrossChainWarriors = async (
 };
 
 export const deployZetaMPIMock = async () => {
-  const Factory = (await ethers.getContractFactory(
-    "ZetaMPIMock"
-  )) as ZetaMPIMockFactory;
+  const Factory = (await ethers.getContractFactory("ZetaMPIMock")) as ZetaMPIMockFactory;
 
   const zetaMPIMockContract = (await Factory.deploy()) as ZetaMPIMock;
 

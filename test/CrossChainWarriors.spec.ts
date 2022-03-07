@@ -1,10 +1,7 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import {
-  deployCrossChainWarriorsMock,
-  deployZetaMPIMock,
-} from "../lib/CrossChainWarriors.helpers";
+import { deployCrossChainWarriorsMock, deployZetaMPIMock } from "../lib/CrossChainWarriors.helpers";
 import { CrossChainWarriorsMock, ZetaMPIMock } from "../typechain";
 import { getMintTokenId } from "./test.helpers";
 
@@ -66,23 +63,17 @@ describe("CrossChainWarriors tests", () => {
     it("Should increment tokenIds by two", async () => {
       expect(await crossChainWarriorsContractChainA.tokenIds()).to.equal(1);
 
-      await (
-        await crossChainWarriorsContractChainA.mint(account1Address)
-      ).wait();
+      await (await crossChainWarriorsContractChainA.mint(account1Address)).wait();
 
       expect(await crossChainWarriorsContractChainA.tokenIds()).to.equal(3);
     });
 
     it("Should create a new NFT owned by the input address", async () => {
-      const result = await (
-        await crossChainWarriorsContractChainA.mint(account1Address)
-      ).wait();
+      const result = await (await crossChainWarriorsContractChainA.mint(account1Address)).wait();
 
       const tokenId = getMintTokenId(result);
 
-      expect(await crossChainWarriorsContractChainA.ownerOf(tokenId)).to.equal(
-        account1Address
-      );
+      expect(await crossChainWarriorsContractChainA.ownerOf(tokenId)).to.equal(account1Address);
     });
   });
 
@@ -90,13 +81,9 @@ describe("CrossChainWarriors tests", () => {
     it("Should mint an NFT with the given input id owned by the input address", async () => {
       const id = 10;
 
-      await (
-        await crossChainWarriorsContractChainA.mintId(account1Address, id)
-      ).wait();
+      await (await crossChainWarriorsContractChainA.mintId(account1Address, id)).wait();
 
-      expect(await crossChainWarriorsContractChainA.ownerOf(id)).to.equal(
-        account1Address
-      );
+      expect(await crossChainWarriorsContractChainA.ownerOf(id)).to.equal(account1Address);
     });
   });
 
@@ -104,35 +91,24 @@ describe("CrossChainWarriors tests", () => {
     it("Should revert if the caller is not the NFT owner nor approved", async () => {
       const id = 10;
 
-      await (
-        await crossChainWarriorsContractChainA.mintId(account1Address, id)
-      ).wait();
+      await (await crossChainWarriorsContractChainA.mintId(account1Address, id)).wait();
 
       /**
        * The caller is the contract deployer and the NFT owner is account1
        */
-      expect(
-        crossChainWarriorsContractChainA.crossChainTransfer(account1Address, id)
-      ).to.be.revertedWith("Transfer caller is not owner nor approved");
+      expect(crossChainWarriorsContractChainA.crossChainTransfer(account1Address, id)).to.be.revertedWith(
+        "Transfer caller is not owner nor approved"
+      );
     });
 
     it("Should burn the tokenId", async () => {
       const id = 10;
 
-      await (
-        await crossChainWarriorsContractChainA.mintId(deployerAddress, id)
-      ).wait();
+      await (await crossChainWarriorsContractChainA.mintId(deployerAddress, id)).wait();
 
-      expect(await crossChainWarriorsContractChainA.ownerOf(id)).to.equal(
-        deployerAddress
-      );
+      expect(await crossChainWarriorsContractChainA.ownerOf(id)).to.equal(deployerAddress);
 
-      await (
-        await crossChainWarriorsContractChainA.crossChainTransfer(
-          account1Address,
-          id
-        )
-      ).wait();
+      await (await crossChainWarriorsContractChainA.crossChainTransfer(account1Address, id)).wait();
 
       expect(crossChainWarriorsContractChainA.ownerOf(id)).to.be.revertedWith(
         "ERC721: owner query for nonexistent token"
@@ -142,20 +118,11 @@ describe("CrossChainWarriors tests", () => {
     it("Should mint tokenId in the destination chain", async () => {
       const id = 10;
 
-      await (
-        await crossChainWarriorsContractChainA.mintId(deployerAddress, id)
-      ).wait();
+      await (await crossChainWarriorsContractChainA.mintId(deployerAddress, id)).wait();
 
-      await (
-        await crossChainWarriorsContractChainA.crossChainTransfer(
-          account1Address,
-          id
-        )
-      ).wait();
+      await (await crossChainWarriorsContractChainA.crossChainTransfer(account1Address, id)).wait();
 
-      expect(await crossChainWarriorsContractChainB.ownerOf(id)).to.equal(
-        account1Address
-      );
+      expect(await crossChainWarriorsContractChainB.ownerOf(id)).to.equal(account1Address);
     });
   });
 
@@ -163,18 +130,13 @@ describe("CrossChainWarriors tests", () => {
     it("Should revert if the caller is not the Zeta MPI contract", async () => {
       await expect(
         crossChainWarriorsContractChainA.uponZetaMessage(
-          encoder.encode(
-            ["address"],
-            [crossChainWarriorsContractChainA.address]
-          ),
+          encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
           1,
           crossChainWarriorsContractChainB.address,
           0,
           encoder.encode(["address"], [deployerAddress])
         )
-      ).to.be.revertedWith(
-        "This function can only be called by the Zeta MPI contract"
-      );
+      ).to.be.revertedWith("This function can only be called by the Zeta MPI contract");
     });
 
     it("Should revert if the cross-chain address doesn't match with the stored one", async () => {
@@ -192,10 +154,7 @@ describe("CrossChainWarriors tests", () => {
     it("Should revert if the cross-chain id doesn't match with the stored one", async () => {
       await expect(
         zetaMPIMockContract.callUponZetaMessage(
-          encoder.encode(
-            ["address"],
-            [crossChainWarriorsContractChainA.address]
-          ),
+          encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
           2,
           crossChainWarriorsContractChainB.address,
           0,
@@ -205,17 +164,13 @@ describe("CrossChainWarriors tests", () => {
     });
 
     it("Should revert if the message type doesn't match with CROSS_CHAIN_TRANSFER_MESSAGE", async () => {
-      const messageType =
-        await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
+      const messageType = await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
 
       const invalidMessageType = messageType.replace("9", "8");
 
       await expect(
         zetaMPIMockContract.callUponZetaMessage(
-          encoder.encode(
-            ["address"],
-            [crossChainWarriorsContractChainA.address]
-          ),
+          encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
           1,
           crossChainWarriorsContractChainB.address,
           0,
@@ -228,17 +183,13 @@ describe("CrossChainWarriors tests", () => {
     });
 
     it("Should revert if the token already exists", async () => {
-      const messageType =
-        await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
+      const messageType = await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
 
       await crossChainWarriorsContractChainB.mintId(deployerAddress, 1);
 
       await expect(
         zetaMPIMockContract.callUponZetaMessage(
-          encoder.encode(
-            ["address"],
-            [crossChainWarriorsContractChainA.address]
-          ),
+          encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
           1,
           crossChainWarriorsContractChainB.address,
           0,
@@ -252,14 +203,10 @@ describe("CrossChainWarriors tests", () => {
 
     describe("Given a valid input", () => {
       it("Should mint a new token in the destination chain", async () => {
-        const messageType =
-          await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
+        const messageType = await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
 
         await zetaMPIMockContract.callUponZetaMessage(
-          encoder.encode(
-            ["address"],
-            [crossChainWarriorsContractChainA.address]
-          ),
+          encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
           1,
           crossChainWarriorsContractChainB.address,
           0,
@@ -269,20 +216,14 @@ describe("CrossChainWarriors tests", () => {
           )
         );
 
-        expect(await crossChainWarriorsContractChainB.ownerOf(1)).to.equal(
-          deployerAddress
-        );
+        expect(await crossChainWarriorsContractChainB.ownerOf(1)).to.equal(deployerAddress);
       });
 
       it("Should mint a new token in the destination chain, owned by the provided 'to' address", async () => {
-        const messageType =
-          await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
+        const messageType = await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
 
         await zetaMPIMockContract.callUponZetaMessage(
-          encoder.encode(
-            ["address"],
-            [crossChainWarriorsContractChainA.address]
-          ),
+          encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
           1,
           crossChainWarriorsContractChainB.address,
           0,
@@ -292,9 +233,7 @@ describe("CrossChainWarriors tests", () => {
           )
         );
 
-        expect(await crossChainWarriorsContractChainB.ownerOf(1)).to.equal(
-          account1Address
-        );
+        expect(await crossChainWarriorsContractChainB.ownerOf(1)).to.equal(account1Address);
       });
     });
   });
@@ -307,24 +246,16 @@ describe("CrossChainWarriors tests", () => {
     it("Should give back the NFT to the sender", async () => {
       const nftId = 1;
 
-      await (
-        await crossChainWarriorsContractChainA.mintId(deployerAddress, nftId)
-      ).wait();
+      await (await crossChainWarriorsContractChainA.mintId(deployerAddress, nftId)).wait();
 
-      await (
-        await crossChainWarriorsContractChainA.crossChainTransfer(
-          deployerAddress,
-          nftId
-        )
-      ).wait();
+      await (await crossChainWarriorsContractChainA.crossChainTransfer(deployerAddress, nftId)).wait();
 
       // Make sure that the NFT was removed from the origin chain
-      await expect(
-        crossChainWarriorsContractChainA.ownerOf(nftId)
-      ).to.be.revertedWith("ERC721: owner query for nonexistent token");
+      await expect(crossChainWarriorsContractChainA.ownerOf(nftId)).to.be.revertedWith(
+        "ERC721: owner query for nonexistent token"
+      );
 
-      const messageType =
-        await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
+      const messageType = await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
 
       await zetaMPIMockContract.callZetaMessageRevert(
         encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
@@ -338,9 +269,7 @@ describe("CrossChainWarriors tests", () => {
         )
       );
 
-      expect(await crossChainWarriorsContractChainB.ownerOf(nftId)).to.equal(
-        deployerAddress
-      );
+      expect(await crossChainWarriorsContractChainB.ownerOf(nftId)).to.equal(deployerAddress);
     });
   });
 });

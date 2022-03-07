@@ -1,6 +1,8 @@
 const path = require("path");
 
-const OFF = 0;
+// const OFF = 0;
+// const WARN = 1;
+const ERROR = 2;
 
 /**
  * @type {import("eslint").Linter.Config}
@@ -12,9 +14,9 @@ module.exports = {
     mocha: true,
     node: true,
   },
-  plugins: ["@typescript-eslint"],
-  extends: ["standard", "plugin:prettier/recommended"],
   parser: "@typescript-eslint/parser",
+  plugins: ["@typescript-eslint", "prettier"],
+  extends: ["standard", "plugin:prettier/recommended"],
   parserOptions: {
     ecmaVersion: 12,
   },
@@ -31,10 +33,5 @@ module.exports = {
       },
     },
   },
-  rules: {
-    "node/no-unsupported-features/es-syntax": [
-      "error",
-      { ignores: ["modules"] },
-    ],
-  },
+  rules: {},
 };

@@ -1,10 +1,7 @@
 import { writeFileSync } from "fs";
 import { ethers, network } from "hardhat";
 import { join } from "path";
-import {
-  getAddressConstants,
-  isNetworkName,
-} from "../lib/CrossChainWarriors.constants";
+import { getAddressConstants, isNetworkName } from "../lib/CrossChainWarriors.constants";
 import { getCrossChainWarriors } from "../lib/CrossChainWarriors.helpers";
 
 async function main() {
@@ -14,16 +11,13 @@ async function main() {
 
   const addressConstants = {
     bsctestnet: {
-      crossChainWarriorsAddress:
-        prevAddressConstants.bsctestnet.crossChainWarriorsAddress,
+      crossChainWarriorsAddress: prevAddressConstants.bsctestnet.crossChainWarriorsAddress,
     },
     goerli: {
-      crossChainWarriorsAddress:
-        prevAddressConstants.goerli.crossChainWarriorsAddress,
+      crossChainWarriorsAddress: prevAddressConstants.goerli.crossChainWarriorsAddress,
     },
     hardhat: {
-      crossChainWarriorsAddress:
-        prevAddressConstants.hardhat.crossChainWarriorsAddress,
+      crossChainWarriorsAddress: prevAddressConstants.hardhat.crossChainWarriorsAddress,
     },
   };
 
@@ -45,35 +39,23 @@ async function main() {
     const filename = "../addressConstants.local.json";
     console.log("Updating", filename);
 
-    addressConstants.hardhat.crossChainWarriorsAddress =
-      crossChainWarriorsContract.address;
+    addressConstants.hardhat.crossChainWarriorsAddress = crossChainWarriorsContract.address;
 
-    writeFileSync(
-      join(__dirname, filename),
-      JSON.stringify(addressConstants, null, 2)
-    );
+    writeFileSync(join(__dirname, filename), JSON.stringify(addressConstants, null, 2));
   } else if (network.name === "bsctestnet") {
     const filename = "../addressConstants.testnet.json";
     console.log("Updating", filename);
 
-    addressConstants.bsctestnet.crossChainWarriorsAddress =
-      crossChainWarriorsContract.address;
+    addressConstants.bsctestnet.crossChainWarriorsAddress = crossChainWarriorsContract.address;
 
-    writeFileSync(
-      join(__dirname, filename),
-      JSON.stringify(addressConstants, null, 2)
-    );
+    writeFileSync(join(__dirname, filename), JSON.stringify(addressConstants, null, 2));
   } else if (network.name === "goerli") {
     const filename = "../addressConstants.testnet.json";
     console.log("Updating", filename);
 
-    addressConstants.goerli.crossChainWarriorsAddress =
-      crossChainWarriorsContract.address;
+    addressConstants.goerli.crossChainWarriorsAddress = crossChainWarriorsContract.address;
 
-    writeFileSync(
-      join(__dirname, filename),
-      JSON.stringify(addressConstants, null, 2)
-    );
+    writeFileSync(join(__dirname, filename), JSON.stringify(addressConstants, null, 2));
   }
 }
 

@@ -9,8 +9,7 @@ import "solidity-coverage";
 
 dotenv.config();
 
-const PRIVATE_KEYS =
-  process.env.PRIVATE_KEY !== undefined ? [`0x${process.env.PRIVATE_KEY}`] : [];
+const PRIVATE_KEYS = process.env.PRIVATE_KEY !== undefined ? [`0x${process.env.PRIVATE_KEY}`] : [];
 
 const config: HardhatUserConfig = {
   solidity: "0.8.12",
