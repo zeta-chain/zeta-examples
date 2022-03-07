@@ -60,7 +60,7 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
         return baseURI;
     }
 
-    function mint(address to) public onlyOwner returns (uint256) {
+    function mint(address to) public returns (uint256) {
         uint256 newWarriorId = tokenIds.current();
         _safeMint(to, newWarriorId);
 
@@ -74,6 +74,9 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
         return newWarriorId;
     }
 
+    /**
+     * @dev Useful for cross-chain minting
+     */
     function _mintId(address to, uint256 tokenId) internal {
         _safeMint(to, tokenId);
     }
