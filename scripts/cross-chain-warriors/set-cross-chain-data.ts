@@ -1,6 +1,6 @@
 import { ethers, network } from "hardhat";
-import { getAddressConstants, isNetworkName, networkVariables } from "../lib/CrossChainWarriors.constants";
-import { getCrossChainWarriors } from "../lib/CrossChainWarriors.helpers";
+import { getAddressConstants, isNetworkName, networkVariables } from "../../lib/CrossChainWarriors.constants";
+import { getCrossChainWarriors } from "../../lib/CrossChainWarriors.helpers";
 
 const encoder = new ethers.utils.AbiCoder();
 
