@@ -16,14 +16,9 @@ import { isNetworkName, networkVariables } from "./CrossChainWarriors.constants"
 export const deployCrossChainWarriorsMock = async ({
   customUseEven,
   zetaMPIMockAddress,
-  /**
-   * @description this one is not being used
-   */
-  zetaTokenMockAddress = "0x0000000000000000000000000000000000000000",
 }: {
   customUseEven: boolean;
   zetaMPIMockAddress: string;
-  zetaTokenMockAddress?: string;
 }) => {
   const isLocalEnvironment = network.name === "hardhat";
 
@@ -33,11 +28,7 @@ export const deployCrossChainWarriorsMock = async ({
 
   const useEven = customUseEven;
 
-  const crossChainWarriorsContract = (await Factory.deploy(
-    zetaMPIMockAddress,
-    zetaTokenMockAddress,
-    useEven
-  )) as CrossChainWarriorsMock;
+  const crossChainWarriorsContract = (await Factory.deploy(zetaMPIMockAddress, useEven)) as CrossChainWarriorsMock;
 
   await crossChainWarriorsContract.deployed();
 
@@ -62,7 +53,6 @@ export const getCrossChainWarriors = async (existingContractAddress?: string) =>
   console.log("Deploying Cross Chain Warriors");
   const crossChainWarriorsContract = (await Factory.deploy(
     _networkVariables.MPI_ADDRESS,
-    _networkVariables.ZETA_TOKEN_ADDRESS,
     useEven
   )) as CrossChainWarriors;
 

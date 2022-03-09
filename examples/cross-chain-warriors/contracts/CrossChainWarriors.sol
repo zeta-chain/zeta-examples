@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-import "../shared/ZetaMPI.sol";
+import "./ZetaMPI.sol";
 
 contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
     using Counters for Counters.Counter;
@@ -29,12 +29,10 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
 
     constructor(
         address _zetaMpiInputAddress,
-        address _zetaTokenAddress,
         bool useEven
     ) {
         _zetaMpiAddress = _zetaMpiInputAddress;
         _zetaMpi = ZetaMPI(_zetaMpiInputAddress);
-        _zetaToken = IERC20(_zetaTokenAddress);
 
         /**
          * @dev A simple way to prevent collisions between cross-chain token ids
@@ -105,14 +103,14 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
     }
 
     function uponZetaMessage(
-        bytes calldata sender,
+        bytes calldata srcContract,
         uint16, // srcChainID
         address, // destContract
         uint256, // zetaAmount
         bytes calldata message
     ) external {
         require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
-        require(keccak256(sender) == keccak256(_crossChainAddress), "Cross-chain address doesn't match");
+        require(keccak256(srcContract) == keccak256(_crossChainAddress), "Cross-chain address doesn't match");
         /**
          * @custom:todo (lucas) re-enable crossChainID check
          */

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
-import "../../shared/ZetaMPI.sol";
+import "../ZetaMPI.sol";
 import "../CrossChainWarriors.sol";
 
 contract CrossChainWarriorsZetaMPIMock is ZetaMPI {

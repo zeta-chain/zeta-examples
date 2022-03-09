@@ -6,8 +6,11 @@
     "esModuleInterop": true,
     "outDir": "dist",
     "declaration": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["./*"]
+    }
   },
-  "include": ["./scripts", "./lib", "./test", "./typechain", "./*.json"],
-  "files": ["./hardhat.config.ts"]
+  "include": ["./scripts", "./lib", "./test", "./typechain", "./*.json"]
 }
