@@ -2,8 +2,13 @@
   "name": "@zetachain/cross-chain-counter",
   "license": "MIT",
   "scripts": {
-    "test": "npx hardhat test",
+    "lint:fix": "npm run lint:js:fix && npm run lint:sol:fix",
+    "lint:js:fix": "eslint --ext .js,.ts . --fix",
+    "lint:js": "eslint --ext .js,.ts .",
+    "lint:sol:fix": "prettier --write \"contracts/**/*.sol\"",
+    "lint:sol": "solhint 'contracts/**/*.sol' && prettier -c 'contracts/**/*.sol'",
+    "lint": "npm run lint:js && npm run lint:sol",
     "test:watch": "echo You need to install `entr` to run this command && find contracts test -iname '*.sol' -o -iname '*.spec.ts' | entr -cnr npx hardhat test",
-    "tsc:watch": "tsc --watch"
+    "test": "npx hardhat test"
   }
 }
