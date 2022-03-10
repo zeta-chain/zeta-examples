@@ -1493,6 +1493,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@zetachain/cross-chain-counter@workspace:examples/cross-chain-counter":
+  version: 0.0.0-use.local
+  resolution: "@zetachain/cross-chain-counter@workspace:examples/cross-chain-counter"
+  languageName: unknown
+  linkType: soft
+
 "@zetachain/cross-chain-warriors@workspace:examples/cross-chain-warriors":
   version: 0.0.0-use.local
   resolution: "@zetachain/cross-chain-warriors@workspace:examples/cross-chain-warriors"
@@ -1536,12 +1542,6 @@ __metadata:
     ts-node: ^10.5.0
     typechain: ^5.2.0
     typescript: 4.5.5
-  languageName: unknown
-  linkType: soft
-
-"@zetachain/hello-world@workspace:examples/hello-world":
-  version: 0.0.0-use.local
-  resolution: "@zetachain/hello-world@workspace:examples/hello-world"
   languageName: unknown
   linkType: soft
 

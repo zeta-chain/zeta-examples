@@ -7,9 +7,7 @@ contract {{uppercasify name}} {
     address internal _zetaMpiAddress;
     ZetaMPI internal _zetaMpi;
 
-    constructor(
-        address _zetaMpiInputAddress
-    ) {
+    constructor(address _zetaMpiInputAddress) {
         _zetaMpiAddress = _zetaMpiInputAddress;
         _zetaMpi = ZetaMPI(_zetaMpiInputAddress);
     }

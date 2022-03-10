@@ -7,10 +7,14 @@ contract CrossChainCounter {
     address internal _zetaMpiAddress;
     ZetaMPI internal _zetaMpi;
 
-    constructor(
-        address _zetaMpiInputAddress
-    ) {
+    mapping(address => uint256) public counter;
+
+    constructor(address _zetaMpiInputAddress) {
         _zetaMpiAddress = _zetaMpiInputAddress;
         _zetaMpi = ZetaMPI(_zetaMpiInputAddress);
+    }
+
+    function increment() public {
+        counter[msg.sender]++;
     }
 }

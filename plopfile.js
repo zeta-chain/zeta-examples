@@ -21,6 +21,25 @@ export default function (
     }
   );
 
+  plop.addHelper(
+    "separe",
+    function (
+      /** @type string[] */
+      words
+    ) {
+      /**
+       * @example cross-chain-warriors => Cross Chain Warriors
+       */
+      return (
+        words
+          // Make first letter uppercase
+          .replace(/[a-z]/, (f) => f.toUpperCase())
+          // replace dash + letter for uppercase letter + space
+          .replace(/-[a-z]/g, (v) => v.replace(/-/g, " ").toUpperCase())
+      );
+    }
+  );
+
   plop.setGenerator("New example", {
     description: "Add new ZetaChain example",
     prompts: [
