@@ -17,8 +17,12 @@
 
 ### Creating a new example
 
-        yarn add-example
+```bash
+yarn add-example
+```
 
 ### Running all the examples tests
 
-        yarn test
+```bash
+yarn test
+```
