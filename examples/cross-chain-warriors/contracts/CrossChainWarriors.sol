@@ -35,9 +35,9 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
         _zetaMpi = ZetaMPI(_zetaMpiInputAddress);
 
         /**
-            * @dev A simple way to prevent collisions between cross-chain token ids
-            * @custom:see mint
-            */
+          * @dev A simple way to prevent collisions between cross-chain token ids
+          * @custom:see mint
+          */
         tokenIds.increment();
         if (useEven) tokenIds.increment();
     }
