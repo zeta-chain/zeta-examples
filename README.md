@@ -15,6 +15,8 @@
 
         yarn
 
+## Usage
+
 ### Creating a new example
 
 ```bash
