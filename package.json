@@ -1,6 +1,11 @@
 {
-  "name": "hardhat-project",
+  "name": "@zetachain/examples",
   "license": "MIT",
+  "workspaces": {
+    "packages": [
+      "examples/*"
+    ]
+  },
   "scripts": {
     "lint": "npm run lint:js && npm run lint:sol",
     "lint:fix": "npm run lint:js:fix && npm run lint:sol:fix",
@@ -8,8 +13,8 @@
     "lint:js:fix": "eslint --ignore-path .gitignore --ext .js,.ts . --fix",
     "lint:sol": "solhint 'contracts/**/*.sol' && prettier -c 'contracts/**/*.sol'",
     "lint:sol:fix": "prettier --write \"contracts/**/*.sol\"",
-    "test": "yarn hardhat test",
-    "test:watch": "echo You need to install `entr` to run this command && find contracts test -iname '*.sol' -o -iname '*.spec.ts' | entr -cnr npx hardhat test",
+    "test": "yarn workspaces foreach -ipv run test",
+    "test:watch": "yarn workspaces foreach -ipv run test:watch",
     "tsc:watch": "tsc --watch"
   },
   "devDependencies": {
@@ -45,5 +50,6 @@
     "ts-node": "^10.5.0",
     "typechain": "^5.2.0",
     "typescript": "4.5.5"
-  }
+  },
+  "packageManager": "yarn@3.2.0"
 }

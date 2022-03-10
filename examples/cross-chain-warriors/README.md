@@ -4,7 +4,7 @@ A cross-chain NFT collection powered by [ZetaChain](https://www.zetachain.com/).
 
 ## Try it in testnet
 
-The collection is currently deployed to BSC Testnet and Goerli, the contracts are verified so you can use BscScan and Etherscan to play with them.
+The collection is currently deployed to [BSC Testnet](https://testnet.bscscan.com/address/0x3034b2C956451d074377FF322F2671fA16572e44) and [Goerli](https://goerli.etherscan.io/address/0x8f58B921D6be6e5C624AAa7a525c394f25f42767), the contracts are verified so you can use BscScan and Etherscan to play with them.
 
 ### Doing a cross-chain NFT transfer
 
