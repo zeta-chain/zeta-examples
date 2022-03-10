@@ -1,8 +1,8 @@
 import { writeFileSync } from "fs";
 import { ethers, network } from "hardhat";
 import { join } from "path";
-import { getAddressConstants, isNetworkName } from "../../lib/CrossChainWarriors.constants";
-import { getCrossChainWarriors } from "../../lib/CrossChainWarriors.helpers";
+import { getAddressConstants, isNetworkName } from "../lib/CrossChainWarriors.constants";
+import { getCrossChainWarriors } from "../lib/CrossChainWarriors.helpers";
 
 async function main() {
   if (!isNetworkName(network.name)) throw new Error("Invalid network name");

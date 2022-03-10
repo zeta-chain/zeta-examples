@@ -1,5 +1,5 @@
 {
-  "name": "@zetachain/cross-chain-warriors",
+  "name": "@zetachain/cross-chain-counter",
   "license": "MIT",
   "scripts": {
     "test": "npx hardhat test",

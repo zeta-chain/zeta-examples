@@ -22,8 +22,4 @@ describe("lib tests", () => {
       });
     });
   });
-
-  describe("CrossChainWarriors.helpers", () => {
-    //
-  });
 });

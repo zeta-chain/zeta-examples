@@ -6,15 +6,17 @@
       "examples/*"
     ]
   },
+  "type": "module",
   "scripts": {
-    "lint": "npm run lint:js && npm run lint:sol",
+    "add-example": "plop",
     "lint:fix": "npm run lint:js:fix && npm run lint:sol:fix",
-    "lint:js": "eslint --ignore-path .gitignore --ext .js,.ts .",
     "lint:js:fix": "eslint --ignore-path .gitignore --ext .js,.ts . --fix",
-    "lint:sol": "solhint 'contracts/**/*.sol' && prettier -c 'contracts/**/*.sol'",
+    "lint:js": "eslint --ignore-path .gitignore --ext .js,.ts .",
     "lint:sol:fix": "prettier --write \"contracts/**/*.sol\"",
-    "test": "yarn workspaces foreach -ipv run test",
+    "lint:sol": "solhint 'contracts/**/*.sol' && prettier -c 'contracts/**/*.sol'",
+    "lint": "npm run lint:js && npm run lint:sol",
     "test:watch": "yarn workspaces foreach -ipv run test:watch",
+    "test": "yarn workspaces foreach -ipv run test",
     "tsc:watch": "tsc --watch"
   },
   "devDependencies": {
@@ -43,6 +45,7 @@
     "ethers": "^5.5.4",
     "hardhat": "^2.8.4",
     "hardhat-gas-reporter": "^1.0.8",
+    "plop": "^3.0.5",
     "prettier": "^2.5.1",
     "prettier-plugin-solidity": "^1.0.0-beta.13",
     "solhint": "^3.3.7",
