@@ -1,4 +1,4 @@
-# ZetaChain examples
+# ZetaChain Examples
 
 [![Docs](https://img.shields.io/badge/docs-%F0%9F%93%84-43ad51)](https://staging.docs.zetachain.com/)
 
