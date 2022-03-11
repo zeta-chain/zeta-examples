@@ -9,10 +9,10 @@ describe("CrossChainWarriors tests", () => {
   let zetaMPIMockContract: CrossChainWarriorsZetaMPIMock;
 
   let crossChainWarriorsContractChainA: CrossChainWarriorsMock;
-  const chainAID = 1;
+  const chainAId = 1;
 
   let crossChainWarriorsContractChainB: CrossChainWarriorsMock;
-  const chainBID = 2;
+  const chainBId = 2;
 
   let accounts: SignerWithAddress[];
   let deployer: SignerWithAddress;
@@ -28,13 +28,13 @@ describe("CrossChainWarriors tests", () => {
       customUseEven: false,
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
-    await crossChainWarriorsContractChainA.setCrossChainID(chainBID);
+    await crossChainWarriorsContractChainA.setCrossChainID(chainBId);
 
     crossChainWarriorsContractChainB = await deployCrossChainWarriorsMock({
       customUseEven: true,
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
-    await crossChainWarriorsContractChainB.setCrossChainID(chainAID);
+    await crossChainWarriorsContractChainB.setCrossChainID(chainAId);
     await crossChainWarriorsContractChainB.setCrossChainAddress(
       encoder.encode(["address"], [crossChainWarriorsContractChainA.address])
     );

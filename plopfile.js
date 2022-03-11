@@ -22,6 +22,23 @@ module.exports = function (
   );
 
   plop.addHelper(
+    "camelcasify",
+    function (
+      /** @type string[] */
+      words
+    ) {
+      /**
+       * @example cross-chain-warriors => crossChainWarriors
+       */
+      return (
+        words
+          // replace dash + letter for uppercase letter
+          .replace(/-[a-z]/g, (v) => v.replace(/-/g, "").toUpperCase())
+      );
+    }
+  );
+
+  plop.addHelper(
     "separe",
     function (
       /** @type string[] */

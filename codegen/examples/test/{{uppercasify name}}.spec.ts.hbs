@@ -1,7 +1,49 @@
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
+import { ethers } from "hardhat";
+import { deploy{{uppercasify name}}Mock, deployZetaMPIMock } from "../lib/{{uppercasify name}}.helpers";
+import { {{uppercasify name}}Mock, ZetaMPIMock } from "../typechain";
 
 describe("{{uppercasify name}} tests", () => {
-  it("Should work", () => {
-    expect(true).to.equal(true);
+  let {{camelcasify name}}ContractA: {{uppercasify name}}Mock;
+  const chainAId = 1;
+
+  let {{camelcasify name}}ContractB: {{uppercasify name}}Mock;
+  const chainBId = 2;
+
+  let zetaMPIMockContract: ZetaMPIMock;
+
+  let accounts: SignerWithAddress[];
+  let deployer: SignerWithAddress;
+  let account1: SignerWithAddress;
+  let deployerAddress: string;
+  let account1Address: string;
+
+  const encoder = new ethers.utils.AbiCoder();
+
+  beforeEach(async () => {
+    zetaMPIMockContract = await deployZetaMPIMock();
+    {{camelcasify name}}ContractA = await deploy{{uppercasify name}}Mock({
+      zetaMPIMockAddress: zetaMPIMockContract.address,
+    });
+    {{camelcasify name}}ContractB = await deploy{{uppercasify name}}Mock({
+      zetaMPIMockAddress: zetaMPIMockContract.address,
+    });
+
+    await {{camelcasify name}}ContractA.setCrossChainID(chainBId);
+    await {{camelcasify name}}ContractB.setCrossChainID(chainAId);
+    await {{camelcasify name}}ContractA.setCrossChainAddress(encoder.encode(["address"], [{{camelcasify name}}ContractB.address]));
+    await {{camelcasify name}}ContractB.setCrossChainAddress(encoder.encode(["address"], [{{camelcasify name}}ContractA.address]));
+
+    accounts = await ethers.getSigners();
+    [deployer, account1] = accounts;
+    deployerAddress = deployer.address;
+    account1Address = account1.address;
+  });
+
+  describe("someFunction", () => {
+    it("Should work", async () => {
+      expect(true).to.equal(true);
+    });
   });
 });

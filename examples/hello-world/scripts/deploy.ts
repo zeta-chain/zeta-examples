@@ -1,5 +1,5 @@
 async function main() {
-  console.log(`Deploying CrossChainCounter...`);
+  console.log(`Deploying HelloWorld...`);
 }
 
 main().catch((error) => {
