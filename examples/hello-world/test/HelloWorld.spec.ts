@@ -75,16 +75,63 @@ describe("HelloWorld tests", () => {
 
   describe("uponZetaMessage", () => {
     it("Should revert if the caller is not the Zeta MPI contract", async () => {
-      expect(true).to.equal(true);
+      await expect(
+        helloWorldContractA.uponZetaMessage(
+          encoder.encode(["address"], [helloWorldContractA.address]),
+          1,
+          helloWorldContractB.address,
+          0,
+          encoder.encode(["address"], [deployerAddress])
+        )
+      ).to.be.revertedWith("This function can only be called by the Zeta MPI contract");
     });
 
     it("Should revert if the cross-chain address doesn't match with the stored one", async () => {
-      expect(true).to.equal(true);
+      await expect(
+        zetaMPIMockContract.callUponZetaMessage(
+          encoder.encode(["address"], [deployerAddress]),
+          1,
+          helloWorldContractB.address,
+          0,
+          encoder.encode(["address"], [zetaMPIMockContract.address])
+        )
+      ).to.be.revertedWith("Cross-chain address doesn't match");
     });
+
+    /**
+     * @todo (lucas): re-enable cross-chain id check
+     */
+    // it("Should revert if the cross-chain id doesn't match with the stored one", async () => {
+    //   await expect(
+    //     zetaMPIMockContract.callUponZetaMessage(
+    //       encoder.encode(["address"], [helloWorldContractA.address]),
+    //       2,
+    //       helloWorldContractB.address,
+    //       0,
+    //       encoder.encode(["address"], [zetaMPIMockContract.address])
+    //     )
+    //   ).to.be.revertedWith("Cross-chain id doesn't match");
+    // });
 
     describe("Given a valid message", () => {
       it("Should increment the counter", async () => {
-        expect(true).to.equal(true);
+        const messageType = await helloWorldContractA.CROSS_CHAIN_INCREMENT_MESSAGE();
+
+        const originalValue = await helloWorldContractB.counter(deployerAddress);
+        expect(originalValue.toNumber()).to.equal(0);
+
+        await (
+          await zetaMPIMockContract.callUponZetaMessage(
+            encoder.encode(["address"], [helloWorldContractA.address]),
+            1,
+            helloWorldContractB.address,
+            0,
+            encoder.encode(["bytes32", "address"], [messageType, deployer.address])
+          )
+        ).wait();
+
+        const newValue = await helloWorldContractB.counter(deployerAddress);
+        expect(newValue.toNumber()).to.equal(1);
       });
     });
   });

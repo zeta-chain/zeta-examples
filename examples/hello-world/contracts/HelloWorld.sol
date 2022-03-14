@@ -32,7 +32,7 @@ contract HelloWorld is Ownable {
         counter[messageFrom]++;
     }
 
-    function decrement(address messageFrom) internal {
+    function _decrement(address messageFrom) internal {
         require(counter[messageFrom] > 0, "Decrement overflow");
 
         counter[messageFrom]--;
@@ -92,6 +92,6 @@ contract HelloWorld is Ownable {
 
         require(messageType == CROSS_CHAIN_INCREMENT_MESSAGE, "Invalid message type");
 
-        decrement(messageFrom);
+        _decrement(messageFrom);
     }
 }
