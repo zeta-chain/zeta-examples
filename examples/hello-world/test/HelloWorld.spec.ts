@@ -1,32 +1,30 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { deployHelloWorldMock, deployZetaMPIMock } from "../lib/HelloWorld.helpers";
-import { HelloWorldMock, ZetaMPIMock } from "../typechain";
+import { deployTestHelloWorld, deployZetaMPIMock } from "../lib/HelloWorld.helpers";
+import { HelloWorld, ZetaMPIMock } from "../typechain";
 
 describe("HelloWorld tests", () => {
-  let helloWorldContractA: HelloWorldMock;
+  let helloWorldContractA: HelloWorld;
   const chainAId = 1;
 
-  let helloWorldContractB: HelloWorldMock;
+  let helloWorldContractB: HelloWorld;
   const chainBId = 2;
 
   let zetaMPIMockContract: ZetaMPIMock;
 
   let accounts: SignerWithAddress[];
   let deployer: SignerWithAddress;
-  let account1: SignerWithAddress;
   let deployerAddress: string;
-  let account1Address: string;
 
   const encoder = new ethers.utils.AbiCoder();
 
   beforeEach(async () => {
     zetaMPIMockContract = await deployZetaMPIMock();
-    helloWorldContractA = await deployHelloWorldMock({
+    helloWorldContractA = await deployTestHelloWorld({
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
-    helloWorldContractB = await deployHelloWorldMock({
+    helloWorldContractB = await deployTestHelloWorld({
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
 
@@ -36,26 +34,13 @@ describe("HelloWorld tests", () => {
     await helloWorldContractB.setCrossChainID(chainAId);
 
     accounts = await ethers.getSigners();
-    [deployer, account1] = accounts;
+    [deployer] = accounts;
     deployerAddress = deployer.address;
-    account1Address = account1.address;
-  });
-
-  describe("counter", () => {
-    it("Should increment the counter of the address provided as param", async () => {
-      const initialValue = await helloWorldContractA.counter(deployerAddress);
-      expect(initialValue).to.equal(0);
-
-      await (await helloWorldContractA.increment(deployerAddress)).wait();
-
-      const incrementValue = await helloWorldContractA.counter(deployerAddress);
-      expect(incrementValue).to.equal(1);
-    });
   });
 
   describe("crossChainCount", () => {
     it("Should revert if the cross chain address wasn't set", async () => {
-      const unsetContract = await deployHelloWorldMock({
+      const unsetContract = await deployTestHelloWorld({
         zetaMPIMockAddress: zetaMPIMockContract.address,
       });
 
@@ -63,7 +48,7 @@ describe("HelloWorld tests", () => {
     });
 
     it("Should revert if the cross chain id wasn't set", async () => {
-      const unsetContract = await deployHelloWorldMock({
+      const unsetContract = await deployTestHelloWorld({
         zetaMPIMockAddress: zetaMPIMockContract.address,
       });
 

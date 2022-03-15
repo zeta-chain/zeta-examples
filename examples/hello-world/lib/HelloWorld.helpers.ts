@@ -1,8 +1,6 @@
 import assert from "assert";
 import { ethers, network } from "hardhat";
 import {
-  HelloWorldMock__factory as HelloWorldMockFactory,
-  HelloWorldMock,
   HelloWorld__factory as HelloWorldFactory,
   HelloWorld,
   ZetaMPIMock,
@@ -13,14 +11,14 @@ import { isNetworkName, networkVariables } from "./HelloWorld.constants";
 /**
  * @description only for testing or local environment
  */
-export const deployHelloWorldMock = async ({ zetaMPIMockAddress }: { zetaMPIMockAddress: string }) => {
+export const deployTestHelloWorld = async ({ zetaMPIMockAddress }: { zetaMPIMockAddress: string }) => {
   const isLocalEnvironment = network.name === "hardhat";
 
   assert(isLocalEnvironment, "This function is only intended to be used in the local environment");
 
-  const Factory = (await ethers.getContractFactory("HelloWorldMock")) as HelloWorldMockFactory;
+  const Factory = (await ethers.getContractFactory("HelloWorld")) as HelloWorldFactory;
 
-  const helloWorldContract = (await Factory.deploy(zetaMPIMockAddress)) as HelloWorldMock;
+  const helloWorldContract = (await Factory.deploy(zetaMPIMockAddress)) as HelloWorld;
 
   await helloWorldContract.deployed();
 

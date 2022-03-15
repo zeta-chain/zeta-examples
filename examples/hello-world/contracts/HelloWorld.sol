@@ -8,7 +8,6 @@ contract HelloWorld is Ownable {
     bytes32 public constant CROSS_CHAIN_INCREMENT_MESSAGE = keccak256("CROSS_CHAIN_INCREMENT");
 
     address internal _zetaMpiAddress;
-    ZetaMPI internal _zetaMpi;
 
     bytes internal _crossChainAddress;
     uint16 internal _crossChainID;
@@ -17,7 +16,6 @@ contract HelloWorld is Ownable {
 
     constructor(address _zetaMpiInputAddress) {
         _zetaMpiAddress = _zetaMpiInputAddress;
-        _zetaMpi = ZetaMPI(_zetaMpiInputAddress);
     }
 
     function setCrossChainAddress(bytes calldata _ccAddress) public onlyOwner {
@@ -28,25 +26,11 @@ contract HelloWorld is Ownable {
         _crossChainID = _ccId;
     }
 
-    function _increment(address messageFrom) internal {
-        counter[messageFrom]++;
-    }
-
-    function _decrement(address messageFrom) internal {
-        require(counter[messageFrom] > 0, "Decrement overflow");
-
-        counter[messageFrom]--;
-    }
-
-    /**
-     * @dev Cross-chain functions
-     */
-
     function crossChainCount() external {
         require(_crossChainAddress.length != 0, "Cross-chain address is not set");
         require(_crossChainID != 0, "Cross-chain ID is not set");
 
-        _zetaMpi.zetaMessageSend(
+        ZetaMPI(_zetaMpiAddress).zetaMessageSend(
             _crossChainID,
             _crossChainAddress,
             0,
@@ -74,7 +58,7 @@ contract HelloWorld is Ownable {
 
         require(messageType == CROSS_CHAIN_INCREMENT_MESSAGE, "Invalid message type");
 
-        _increment(messageFrom);
+        counter[messageFrom]++;
     }
 
     function zetaMessageRevert(
@@ -87,11 +71,15 @@ contract HelloWorld is Ownable {
         bytes32 // messageID
     ) external {
         require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
+        /**
+         * @custom:todo (lucas) add cross-chain address check
+         */
 
         (bytes32 messageType, address messageFrom) = abi.decode(message, (bytes32, address));
 
         require(messageType == CROSS_CHAIN_INCREMENT_MESSAGE, "Invalid message type");
+        require(counter[messageFrom] > 0, "Decrement overflow");
 
-        _decrement(messageFrom);
+        counter[messageFrom]--;
     }
 }

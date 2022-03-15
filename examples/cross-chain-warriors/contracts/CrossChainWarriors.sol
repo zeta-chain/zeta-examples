@@ -138,6 +138,9 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
         bytes32 // messageID
     ) external {
         require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
+        /**
+         * @custom:todo (lucas) add cross-chain address check
+         */
 
         (bytes32 messageType, uint256 tokenId, address from) = abi.decode(message, (bytes32, uint256, address));
 
