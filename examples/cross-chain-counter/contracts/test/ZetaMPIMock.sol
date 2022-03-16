@@ -2,7 +2,7 @@
 pragma solidity ^0.8.12;
 
 import "../ZetaMPI.sol";
-import "../HelloWorld.sol";
+import "../CrossChainCounter.sol";
 
 contract ZetaMPIMock is ZetaMPI {
     function callUponZetaMessage(
@@ -12,7 +12,7 @@ contract ZetaMPIMock is ZetaMPI {
         uint256 zetaAmount,
         bytes calldata message
     ) public {
-        return HelloWorld(destContract).uponZetaMessage(sender, srcChainID, destContract, zetaAmount, message);
+        return CrossChainCounter(destContract).uponZetaMessage(sender, srcChainID, destContract, zetaAmount, message);
     }
 
     function callZetaMessageRevert(
@@ -25,7 +25,7 @@ contract ZetaMPIMock is ZetaMPI {
     ) public {
         address _sender = abi.decode(sender, (address));
 
-        return HelloWorld(_sender).zetaMessageRevert(_sender, "1", "", zetaAmount, gasLimit, message, "123");
+        return CrossChainCounter(_sender).zetaMessageRevert(_sender, "1", "", zetaAmount, gasLimit, message, "123");
     }
 
     function zetaMessageSend(

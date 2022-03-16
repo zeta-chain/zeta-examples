@@ -1,5 +1,5 @@
 {
-  "name": "@zetachain/hello-world",
+  "name": "@zetachain/cross-chain-counter",
   "license": "MIT",
   "scripts": {
     "lint:fix": "npm run lint:js:fix && npm run lint:sol:fix",

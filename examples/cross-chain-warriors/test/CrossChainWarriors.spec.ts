@@ -151,21 +151,6 @@ describe("CrossChainWarriors tests", () => {
       ).to.be.revertedWith("Cross-chain address doesn't match");
     });
 
-    /**
-     * @todo (lucas): re-enable cross-chain id check
-     */
-    // it("Should revert if the cross-chain id doesn't match with the stored one", async () => {
-    //   await expect(
-    //     zetaMPIMockContract.callUponZetaMessage(
-    //       encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
-    //       2,
-    //       crossChainWarriorsContractChainB.address,
-    //       0,
-    //       encoder.encode(["address"], [zetaMPIMockContract.address])
-    //     )
-    //   ).to.be.revertedWith("Cross-chain id doesn't match");
-    // });
-
     it("Should revert if the message type doesn't match with CROSS_CHAIN_TRANSFER_MESSAGE", async () => {
       const messageType = await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
 

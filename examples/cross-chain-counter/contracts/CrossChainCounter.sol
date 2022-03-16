@@ -4,7 +4,7 @@ pragma solidity ^0.8.12;
 import "./ZetaMPI.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract HelloWorld is Ownable {
+contract CrossChainCounter is Ownable {
     bytes32 public constant CROSS_CHAIN_INCREMENT_MESSAGE = keccak256("CROSS_CHAIN_INCREMENT");
 
     address internal _zetaMpiAddress;
@@ -49,10 +49,6 @@ contract HelloWorld is Ownable {
     ) external {
         require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
         require(keccak256(srcContract) == keccak256(_crossChainAddress), "Cross-chain address doesn't match");
-        /**
-         * @custom:todo (lucas) re-enable crossChainID check
-         */
-        // require(srcChainID == _crossChainID, "Cross-chain id doesn't match");
 
         (bytes32 messageType, address messageFrom) = abi.decode(message, (bytes32, address));
 

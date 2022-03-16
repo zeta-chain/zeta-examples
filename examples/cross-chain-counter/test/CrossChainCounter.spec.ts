@@ -1,14 +1,14 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { deployTestHelloWorld, deployZetaMPIMock } from "../lib/HelloWorld.helpers";
-import { HelloWorld, ZetaMPIMock } from "../typechain";
+import { deployTestCrossChainCounter, deployZetaMPIMock } from "../lib/CrossChainCounter.helpers";
+import { CrossChainCounter, ZetaMPIMock } from "../typechain";
 
-describe("HelloWorld tests", () => {
-  let helloWorldContractA: HelloWorld;
+describe("CrossChainCounter tests", () => {
+  let crossChainCounterContractA: CrossChainCounter;
   const chainAId = 1;
 
-  let helloWorldContractB: HelloWorld;
+  let crossChainCounterContractB: CrossChainCounter;
   const chainBId = 2;
 
   let zetaMPIMockContract: ZetaMPIMock;
@@ -21,17 +21,21 @@ describe("HelloWorld tests", () => {
 
   beforeEach(async () => {
     zetaMPIMockContract = await deployZetaMPIMock();
-    helloWorldContractA = await deployTestHelloWorld({
+    crossChainCounterContractA = await deployTestCrossChainCounter({
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
-    helloWorldContractB = await deployTestHelloWorld({
+    crossChainCounterContractB = await deployTestCrossChainCounter({
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
 
-    await helloWorldContractA.setCrossChainAddress(encoder.encode(["address"], [helloWorldContractB.address]));
-    await helloWorldContractB.setCrossChainAddress(encoder.encode(["address"], [helloWorldContractA.address]));
-    await helloWorldContractA.setCrossChainID(chainBId);
-    await helloWorldContractB.setCrossChainID(chainAId);
+    await crossChainCounterContractA.setCrossChainAddress(
+      encoder.encode(["address"], [crossChainCounterContractB.address])
+    );
+    await crossChainCounterContractB.setCrossChainAddress(
+      encoder.encode(["address"], [crossChainCounterContractA.address])
+    );
+    await crossChainCounterContractA.setCrossChainID(chainBId);
+    await crossChainCounterContractB.setCrossChainID(chainAId);
 
     accounts = await ethers.getSigners();
     [deployer] = accounts;
@@ -40,7 +44,7 @@ describe("HelloWorld tests", () => {
 
   describe("crossChainCount", () => {
     it("Should revert if the cross chain address wasn't set", async () => {
-      const unsetContract = await deployTestHelloWorld({
+      const unsetContract = await deployTestCrossChainCounter({
         zetaMPIMockAddress: zetaMPIMockContract.address,
       });
 
@@ -48,11 +52,11 @@ describe("HelloWorld tests", () => {
     });
 
     it("Should revert if the cross chain id wasn't set", async () => {
-      const unsetContract = await deployTestHelloWorld({
+      const unsetContract = await deployTestCrossChainCounter({
         zetaMPIMockAddress: zetaMPIMockContract.address,
       });
 
-      await unsetContract.setCrossChainAddress(encoder.encode(["address"], [helloWorldContractB.address]));
+      await unsetContract.setCrossChainAddress(encoder.encode(["address"], [crossChainCounterContractB.address]));
 
       await expect(unsetContract.crossChainCount()).to.be.revertedWith("Cross-chain ID is not set");
     });
@@ -61,10 +65,10 @@ describe("HelloWorld tests", () => {
   describe("uponZetaMessage", () => {
     it("Should revert if the caller is not the Zeta MPI contract", async () => {
       await expect(
-        helloWorldContractA.uponZetaMessage(
-          encoder.encode(["address"], [helloWorldContractA.address]),
+        crossChainCounterContractA.uponZetaMessage(
+          encoder.encode(["address"], [crossChainCounterContractA.address]),
           1,
-          helloWorldContractB.address,
+          crossChainCounterContractB.address,
           0,
           encoder.encode(["address"], [deployerAddress])
         )
@@ -76,46 +80,31 @@ describe("HelloWorld tests", () => {
         zetaMPIMockContract.callUponZetaMessage(
           encoder.encode(["address"], [deployerAddress]),
           1,
-          helloWorldContractB.address,
+          crossChainCounterContractB.address,
           0,
           encoder.encode(["address"], [zetaMPIMockContract.address])
         )
       ).to.be.revertedWith("Cross-chain address doesn't match");
     });
 
-    /**
-     * @todo (lucas): re-enable cross-chain id check
-     */
-    // it("Should revert if the cross-chain id doesn't match with the stored one", async () => {
-    //   await expect(
-    //     zetaMPIMockContract.callUponZetaMessage(
-    //       encoder.encode(["address"], [helloWorldContractA.address]),
-    //       2,
-    //       helloWorldContractB.address,
-    //       0,
-    //       encoder.encode(["address"], [zetaMPIMockContract.address])
-    //     )
-    //   ).to.be.revertedWith("Cross-chain id doesn't match");
-    // });
-
     describe("Given a valid message", () => {
       it("Should increment the counter", async () => {
-        const messageType = await helloWorldContractA.CROSS_CHAIN_INCREMENT_MESSAGE();
+        const messageType = await crossChainCounterContractA.CROSS_CHAIN_INCREMENT_MESSAGE();
 
-        const originalValue = await helloWorldContractB.counter(deployerAddress);
+        const originalValue = await crossChainCounterContractB.counter(deployerAddress);
         expect(originalValue.toNumber()).to.equal(0);
 
         await (
           await zetaMPIMockContract.callUponZetaMessage(
-            encoder.encode(["address"], [helloWorldContractA.address]),
+            encoder.encode(["address"], [crossChainCounterContractA.address]),
             1,
-            helloWorldContractB.address,
+            crossChainCounterContractB.address,
             0,
             encoder.encode(["bytes32", "address"], [messageType, deployer.address])
           )
         ).wait();
 
-        const newValue = await helloWorldContractB.counter(deployerAddress);
+        const newValue = await crossChainCounterContractB.counter(deployerAddress);
         expect(newValue.toNumber()).to.equal(1);
       });
     });
