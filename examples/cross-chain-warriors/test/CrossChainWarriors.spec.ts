@@ -9,10 +9,10 @@ describe("CrossChainWarriors tests", () => {
   let zetaMPIMockContract: CrossChainWarriorsZetaMPIMock;
 
   let crossChainWarriorsContractChainA: CrossChainWarriorsMock;
-  const chainAID = 1;
+  const chainAId = 1;
 
   let crossChainWarriorsContractChainB: CrossChainWarriorsMock;
-  const chainBID = 2;
+  const chainBId = 2;
 
   let accounts: SignerWithAddress[];
   let deployer: SignerWithAddress;
@@ -28,13 +28,13 @@ describe("CrossChainWarriors tests", () => {
       customUseEven: false,
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
-    await crossChainWarriorsContractChainA.setCrossChainID(chainBID);
+    await crossChainWarriorsContractChainA.setCrossChainID(chainBId);
 
     crossChainWarriorsContractChainB = await deployCrossChainWarriorsMock({
       customUseEven: true,
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
-    await crossChainWarriorsContractChainB.setCrossChainID(chainAID);
+    await crossChainWarriorsContractChainB.setCrossChainID(chainAId);
     await crossChainWarriorsContractChainB.setCrossChainAddress(
       encoder.encode(["address"], [crossChainWarriorsContractChainA.address])
     );
@@ -150,21 +150,6 @@ describe("CrossChainWarriors tests", () => {
         )
       ).to.be.revertedWith("Cross-chain address doesn't match");
     });
-
-    /**
-     * @todo (lucas): re-enable cross-chain id check
-     */
-    // it("Should revert if the cross-chain id doesn't match with the stored one", async () => {
-    //   await expect(
-    //     zetaMPIMockContract.callUponZetaMessage(
-    //       encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
-    //       2,
-    //       crossChainWarriorsContractChainB.address,
-    //       0,
-    //       encoder.encode(["address"], [zetaMPIMockContract.address])
-    //     )
-    //   ).to.be.revertedWith("Cross-chain id doesn't match");
-    // });
 
     it("Should revert if the message type doesn't match with CROSS_CHAIN_TRANSFER_MESSAGE", async () => {
       const messageType = await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();

@@ -1545,6 +1545,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@zetachain/hello-world@workspace:examples/hello-world":
+  version: 0.0.0-use.local
+  resolution: "@zetachain/hello-world@workspace:examples/hello-world"
+  languageName: unknown
+  linkType: soft
+
 "abbrev@npm:1":
   version: 1.1.1
   resolution: "abbrev@npm:1.1.1"
