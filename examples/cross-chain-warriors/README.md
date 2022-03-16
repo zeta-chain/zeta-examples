@@ -1,8 +1,8 @@
 # Cross Chain Warriors
 
-[![Docs](https://img.shields.io/badge/Zeta%20docs-🔗-43ad51)](https://staging.docs.zetachain.com/develop/examples/cross-chain-nft)
+[![Docs](https://img.shields.io/badge/Zeta%20docs-🔗-43ad51)](https://docs.staging.zetachain.com/develop/examples/cross-chain-nft)
 
-A cross-chain NFT collection using [Zeta MPI](https://staging.docs.zetachain.com/reference/message-passing-api).
+A cross-chain NFT collection using [Zeta MPI](https://docs.staging.zetachain.com/reference/message-passing-api).
 
 ## Try it in testnet
 
