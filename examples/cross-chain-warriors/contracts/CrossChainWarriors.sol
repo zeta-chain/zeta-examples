@@ -33,7 +33,7 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
 
         /**
          * @dev A simple way to prevent collisions between cross-chain token ids
-         * @custom:see mint
+         * As you can see below, the mint function should increase the counter by two
          */
         tokenIds.increment();
         if (useEven) tokenIds.increment();
@@ -61,7 +61,7 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
 
         /**
          * @dev Always increment by two to keep ids even/odd (depending on the chain)
-         * @custom:see constructor
+         * Check the constructor for further reference
          */
         tokenIds.increment();
         tokenIds.increment();
@@ -125,7 +125,7 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
     }
 
     function zetaMessageRevert(
-        address, // sender,
+        bytes calldata srcContract,
         string calldata, // destChainID,
         string calldata, // destContract,
         uint256, // zetaRefundAmount,
@@ -134,9 +134,7 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
         bytes32 // messageID
     ) external {
         require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
-        /**
-         * @custom:todo (lucas) add cross-chain address check
-         */
+        require(keccak256(srcContract) == keccak256(_crossChainAddress), "Cross-chain address doesn't match");
 
         (bytes32 messageType, uint256 tokenId, address from) = abi.decode(message, (bytes32, uint256, address));
 

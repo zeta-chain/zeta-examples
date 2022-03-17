@@ -58,7 +58,7 @@ contract CrossChainCounter is Ownable {
     }
 
     function zetaMessageRevert(
-        address, // sender,
+        bytes calldata srcContract,
         string calldata, // destChainID,
         string calldata, // destContract,
         uint256, // zetaRefundAmount,
@@ -67,9 +67,7 @@ contract CrossChainCounter is Ownable {
         bytes32 // messageID
     ) external {
         require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
-        /**
-         * @custom:todo (lucas) add cross-chain address check
-         */
+        require(keccak256(srcContract) == keccak256(_crossChainAddress), "Cross-chain address doesn't match");
 
         (bytes32 messageType, address messageFrom) = abi.decode(message, (bytes32, address));
 
