@@ -1493,6 +1493,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@zetachain/contracts@workspace:^, @zetachain/contracts@workspace:examples/shared":
+  version: 0.0.0-use.local
+  resolution: "@zetachain/contracts@workspace:examples/shared"
+  languageName: unknown
+  linkType: soft
+
 "@zetachain/cross-chain-counter@workspace:examples/cross-chain-counter":
   version: 0.0.0-use.local
   resolution: "@zetachain/cross-chain-counter@workspace:examples/cross-chain-counter"
@@ -1545,9 +1551,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@zetachain/hello-world@workspace:examples/hello-world":
+"@zetachain/multi-chain-swap@workspace:examples/multi-chain-swap":
   version: 0.0.0-use.local
-  resolution: "@zetachain/hello-world@workspace:examples/hello-world"
+  resolution: "@zetachain/multi-chain-swap@workspace:examples/multi-chain-swap"
+  dependencies:
+    "@zetachain/contracts": "workspace:^"
   languageName: unknown
   linkType: soft
 
