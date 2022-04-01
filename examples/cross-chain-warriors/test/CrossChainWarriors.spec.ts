@@ -28,13 +28,13 @@ describe("CrossChainWarriors tests", () => {
       customUseEven: false,
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
-    await crossChainWarriorsContractChainA.setCrossChainID(chainBId);
+    await crossChainWarriorsContractChainA.setCrossChainId(chainBId);
 
     crossChainWarriorsContractChainB = await deployCrossChainWarriorsMock({
       customUseEven: true,
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
-    await crossChainWarriorsContractChainB.setCrossChainID(chainAId);
+    await crossChainWarriorsContractChainB.setCrossChainId(chainAId);
     await crossChainWarriorsContractChainB.setCrossChainAddress(
       encoder.encode(["address"], [crossChainWarriorsContractChainA.address])
     );
@@ -126,22 +126,22 @@ describe("CrossChainWarriors tests", () => {
     });
   });
 
-  describe("uponZetaMessage", () => {
+  describe("onZetaMessage", () => {
     it("Should revert if the caller is not the Zeta MPI contract", async () => {
       await expect(
-        crossChainWarriorsContractChainA.uponZetaMessage(
-          encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
-          1,
-          crossChainWarriorsContractChainB.address,
-          0,
-          encoder.encode(["address"], [deployerAddress])
-        )
+        crossChainWarriorsContractChainA.onZetaMessage({
+          originSenderAddress: encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
+          originChainId: 1,
+          destinationAddress: crossChainWarriorsContractChainB.address,
+          zetaAmount: 0,
+          message: encoder.encode(["address"], [deployerAddress]),
+        })
       ).to.be.revertedWith("This function can only be called by the Zeta MPI contract");
     });
 
     it("Should revert if the cross-chain address doesn't match with the stored one", async () => {
       await expect(
-        zetaMPIMockContract.callUponZetaMessage(
+        zetaMPIMockContract.callOnZetaMessage(
           encoder.encode(["address"], [deployerAddress]),
           1,
           crossChainWarriorsContractChainB.address,
@@ -157,7 +157,7 @@ describe("CrossChainWarriors tests", () => {
       const invalidMessageType = messageType.replace("9", "8");
 
       await expect(
-        zetaMPIMockContract.callUponZetaMessage(
+        zetaMPIMockContract.callOnZetaMessage(
           encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
           1,
           crossChainWarriorsContractChainB.address,
@@ -176,7 +176,7 @@ describe("CrossChainWarriors tests", () => {
       await crossChainWarriorsContractChainB.mintId(deployerAddress, 1);
 
       await expect(
-        zetaMPIMockContract.callUponZetaMessage(
+        zetaMPIMockContract.callOnZetaMessage(
           encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
           1,
           crossChainWarriorsContractChainB.address,
@@ -193,7 +193,7 @@ describe("CrossChainWarriors tests", () => {
       it("Should mint a new token in the destination chain", async () => {
         const messageType = await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
 
-        await zetaMPIMockContract.callUponZetaMessage(
+        await zetaMPIMockContract.callOnZetaMessage(
           encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
           1,
           crossChainWarriorsContractChainB.address,
@@ -210,7 +210,7 @@ describe("CrossChainWarriors tests", () => {
       it("Should mint a new token in the destination chain, owned by the provided 'to' address", async () => {
         const messageType = await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
 
-        await zetaMPIMockContract.callUponZetaMessage(
+        await zetaMPIMockContract.callOnZetaMessage(
           encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
           1,
           crossChainWarriorsContractChainB.address,
@@ -226,7 +226,7 @@ describe("CrossChainWarriors tests", () => {
     });
   });
 
-  describe("zetaMessageRevert", () => {
+  describe("onZetaRevert", () => {
     /**
      * @description note that given how this test was implemented, the NFT will exist in the two chains
      * that's not the real-world behavior but it's ok for this unit test
@@ -245,10 +245,10 @@ describe("CrossChainWarriors tests", () => {
 
       const messageType = await crossChainWarriorsContractChainA.CROSS_CHAIN_TRANSFER_MESSAGE();
 
-      await zetaMPIMockContract.callZetaMessageRevert(
-        encoder.encode(["address"], [crossChainWarriorsContractChainA.address]),
+      await zetaMPIMockContract.callOnZetaRevert(
+        crossChainWarriorsContractChainA.address,
         1,
-        crossChainWarriorsContractChainB.address,
+        encoder.encode(["address"], [crossChainWarriorsContractChainB.address]),
         0,
         2500000,
         encoder.encode(

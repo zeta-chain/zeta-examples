@@ -30,8 +30,8 @@ describe("{{uppercasify name}} tests", () => {
       zetaMPIMockAddress: zetaMPIMockContract.address,
     });
 
-    await {{camelcasify name}}ContractA.setCrossChainID(chainBId);
-    await {{camelcasify name}}ContractB.setCrossChainID(chainAId);
+    await {{camelcasify name}}ContractA.setCrossChainId(chainBId);
+    await {{camelcasify name}}ContractB.setCrossChainId(chainAId);
     await {{camelcasify name}}ContractA.setCrossChainAddress(encoder.encode(["address"], [{{camelcasify name}}ContractB.address]));
     await {{camelcasify name}}ContractB.setCrossChainAddress(encoder.encode(["address"], [{{camelcasify name}}ContractA.address]));
 

@@ -8,6 +8,8 @@
   },
   "scripts": {
     "add-example": "plop",
+    "compile": "yarn workspaces foreach -ipv run compile",
+    "clean": "yarn workspaces foreach -ipv run clean",
     "lint:fix": "yarn workspaces foreach -ipv run lint:fix",
     "lint:js:fix": "yarn workspaces foreach -ipv run lint:js:fix",
     "lint:js": "yarn workspaces foreach -ipv run lint:js",
