@@ -11,12 +11,15 @@ contract CrossChainCounter is Ownable, ZetaReceiver {
     address internal _zetaMpiAddress;
     ZetaMPI internal _zeta;
 
+    uint256 internal immutable _currentChainId;
+    uint256 internal _crossChainId;
     bytes internal _crossChainAddress;
-    uint16 internal _crossChainId;
 
     mapping(address => uint256) public counter;
 
     constructor(address _zetaMpiInputAddress) {
+        _currentChainId = block.chainid;
+
         _zetaMpiAddress = _zetaMpiInputAddress;
         _zeta = ZetaMPI(_zetaMpiInputAddress);
     }
@@ -25,7 +28,7 @@ contract CrossChainCounter is Ownable, ZetaReceiver {
         _crossChainAddress = _ccAddress;
     }
 
-    function setCrossChainId(uint16 _ccId) public onlyOwner {
+    function setCrossChainId(uint256 _ccId) public onlyOwner {
         _crossChainId = _ccId;
     }
 
@@ -51,6 +54,7 @@ contract CrossChainCounter is Ownable, ZetaReceiver {
             keccak256(_zetaMessage.originSenderAddress) == keccak256(_crossChainAddress),
             "Cross-chain address doesn't match"
         );
+        require(_zetaMessage.originChainId == _crossChainId, "Cross-chain id doesn't match");
 
         (bytes32 messageType, address messageFrom) = abi.decode(_zetaMessage.message, (bytes32, address));
 
@@ -61,10 +65,8 @@ contract CrossChainCounter is Ownable, ZetaReceiver {
 
     function onZetaRevert(ZetaInterfaces.ZetaRevert calldata _zetaRevert) external {
         require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
-        require(
-            keccak256(_zetaRevert.destinationAddress) == keccak256(_crossChainAddress),
-            "Cross-chain address doesn't match"
-        );
+        require(_zetaRevert.originSenderAddress == address(this), "Invalid originSenderAddress");
+        require(_zetaRevert.originChainId == _currentChainId, "Invalid originChainId");
 
         (bytes32 messageType, address messageFrom) = abi.decode(_zetaRevert.message, (bytes32, address));
 
