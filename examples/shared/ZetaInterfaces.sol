@@ -3,7 +3,7 @@ pragma solidity ^0.8.12;
 
 interface ZetaInterfaces {
     struct SendInput {
-        uint16 destinationChainId;
+        uint256 destinationChainId;
         bytes destinationAddress;
         uint256 gasLimit;
         bytes message;
@@ -13,7 +13,7 @@ interface ZetaInterfaces {
 
     struct ZetaMessage {
         bytes originSenderAddress;
-        uint16 originChainId;
+        uint256 originChainId;
         address destinationAddress;
         uint256 zetaAmount;
         bytes message;
@@ -21,8 +21,9 @@ interface ZetaInterfaces {
 
     struct ZetaRevert {
         address originSenderAddress;
+        uint256 originChainId;
         bytes destinationAddress;
-        uint16 destinationChainId;
+        uint256 destinationChainId;
         uint256 zetaAmount;
         bytes message;
     }
