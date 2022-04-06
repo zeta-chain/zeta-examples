@@ -34,8 +34,8 @@ describe("CrossChainCounter tests", () => {
     await crossChainCounterContractB.setCrossChainAddress(
       encoder.encode(["address"], [crossChainCounterContractA.address])
     );
-    await crossChainCounterContractA.setCrossChainID(chainBId);
-    await crossChainCounterContractB.setCrossChainID(chainAId);
+    await crossChainCounterContractA.setCrossChainId(chainBId);
+    await crossChainCounterContractB.setCrossChainId(chainAId);
 
     accounts = await ethers.getSigners();
     [deployer] = accounts;
@@ -58,26 +58,26 @@ describe("CrossChainCounter tests", () => {
 
       await unsetContract.setCrossChainAddress(encoder.encode(["address"], [crossChainCounterContractB.address]));
 
-      await expect(unsetContract.crossChainCount()).to.be.revertedWith("Cross-chain ID is not set");
+      await expect(unsetContract.crossChainCount()).to.be.revertedWith("Cross-chain id is not set");
     });
   });
 
-  describe("uponZetaMessage", () => {
+  describe("onZetaMessage", () => {
     it("Should revert if the caller is not the Zeta MPI contract", async () => {
       await expect(
-        crossChainCounterContractA.uponZetaMessage(
-          encoder.encode(["address"], [crossChainCounterContractA.address]),
-          1,
-          crossChainCounterContractB.address,
-          0,
-          encoder.encode(["address"], [deployerAddress])
-        )
+        crossChainCounterContractA.onZetaMessage({
+          originSenderAddress: encoder.encode(["address"], [crossChainCounterContractA.address]),
+          originChainId: 1,
+          destinationAddress: crossChainCounterContractB.address,
+          zetaAmount: 0,
+          message: encoder.encode(["address"], [deployerAddress]),
+        })
       ).to.be.revertedWith("This function can only be called by the Zeta MPI contract");
     });
 
     it("Should revert if the cross-chain address doesn't match with the stored one", async () => {
       await expect(
-        zetaMPIMockContract.callUponZetaMessage(
+        zetaMPIMockContract.callOnZetaMessage(
           encoder.encode(["address"], [deployerAddress]),
           1,
           crossChainCounterContractB.address,
@@ -95,7 +95,7 @@ describe("CrossChainCounter tests", () => {
         expect(originalValue.toNumber()).to.equal(0);
 
         await (
-          await zetaMPIMockContract.callUponZetaMessage(
+          await zetaMPIMockContract.callOnZetaMessage(
             encoder.encode(["address"], [crossChainCounterContractA.address]),
             1,
             crossChainCounterContractB.address,
@@ -113,7 +113,7 @@ describe("CrossChainCounter tests", () => {
   /**
    * @todo (lucas): implement
    */
-  describe("zetaMessageRevert", () => {
+  describe("onZetaRevert", () => {
     // it("Should work", async () => {
     //   expect(true).to.equal(true);
     // });

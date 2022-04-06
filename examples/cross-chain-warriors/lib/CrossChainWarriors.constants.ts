@@ -16,13 +16,13 @@ export type NetworkVariables = {
 
 export const networkVariables: Record<NetworkName, NetworkVariables> = {
   bsctestnet: {
-    MPI_ADDRESS: "0x96cE47e42A73649CFe33d93D93ACFbEc6FD5ee14",
+    MPI_ADDRESS: "0x4a2d53e16ebe3feC54B407c9e29590951Ce2b6ad",
     chainId: 97,
     crossChainId: 5,
     crossChainName: "goerli",
   },
   goerli: {
-    MPI_ADDRESS: "0x132b042bD5198a48E4D273f46b979E5f13Bd9239",
+    MPI_ADDRESS: "0x4740f4051eA6D896C694303228D86Ba3141065ca",
     chainId: 5,
     crossChainId: 97,
     crossChainName: "bsctestnet",
