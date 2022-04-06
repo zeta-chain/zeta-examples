@@ -8,27 +8,27 @@ contract MultiChainValue is Ownable {
     address public zetaMpi;
     ZetaMPI internal _zeta;
 
-    mapping(uint16 => bool) public availableChainIds;
+    mapping(uint256 => bool) public availableChainIds;
 
     constructor(address _zetaMpiInput) {
         zetaMpi = _zetaMpiInput;
         _zeta = ZetaMPI(_zetaMpiInput);
     }
 
-    function addAvailableChainId(uint16 destinationChainId) external onlyOwner {
+    function addAvailableChainId(uint256 destinationChainId) external onlyOwner {
         require(!availableChainIds[destinationChainId], "MultiChainValue: destinationChainId already enabled");
 
         availableChainIds[destinationChainId] = true;
     }
 
-    function removeAvailableChainId(uint16 destinationChainId) external onlyOwner {
+    function removeAvailableChainId(uint256 destinationChainId) external onlyOwner {
         require(availableChainIds[destinationChainId], "MultiChainValue: destinationChainId not available");
 
         delete availableChainIds[destinationChainId];
     }
 
     function send(
-        uint16 destinationChainId,
+        uint256 destinationChainId,
         bytes calldata destinationAddress,
         uint256 zetaAmount
     ) external {
