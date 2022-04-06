@@ -5,10 +5,10 @@ import "@openzeppelin/contracts/interfaces/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@zetachain/contracts/ZetaInterfaces.sol";
+import "@zetachain/contracts/ZetaReceiver.sol";
 
-import "./ZetaMPI.sol";
-
-contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
+contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable, ZetaReceiver {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
@@ -19,7 +19,7 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
     uint16 internal _crossChainID;
 
     address internal _zetaMpiAddress;
-    ZetaMPI internal _zetaMpi;
+    ZetaMPI internal _zeta;
 
     IERC20 internal _zetaToken;
 
@@ -29,7 +29,7 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
 
     constructor(address _zetaMpiInputAddress, bool useEven) {
         _zetaMpiAddress = _zetaMpiInputAddress;
-        _zetaMpi = ZetaMPI(_zetaMpiInputAddress);
+        _zeta = ZetaMPI(_zetaMpiInputAddress);
 
         /**
          * @dev A simple way to prevent collisions between cross-chain token ids
@@ -43,7 +43,7 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
         _crossChainAddress = _ccAddress;
     }
 
-    function setCrossChainID(uint16 _ccId) public onlyOwner {
+    function setCrossChainId(uint16 _ccId) public onlyOwner {
         _crossChainID = _ccId;
     }
 
@@ -89,25 +89,24 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
 
         _burnWarrior(tokenId);
 
-        _zetaMpi.zetaMessageSend(
-            _crossChainID,
-            _crossChainAddress,
-            0,
-            2500000,
-            abi.encode(CROSS_CHAIN_TRANSFER_MESSAGE, tokenId, msg.sender, to),
-            abi.encode("")
+        _zeta.send(
+            ZetaInterfaces.SendInput({
+                destinationChainId: _crossChainID,
+                destinationAddress: _crossChainAddress,
+                gasLimit: 2500000,
+                message: abi.encode(CROSS_CHAIN_TRANSFER_MESSAGE, tokenId, msg.sender, to),
+                zetaAmount: 0,
+                zetaParams: abi.encode("")
+            })
         );
     }
 
-    function uponZetaMessage(
-        bytes calldata srcContract,
-        uint16, // srcChainID
-        address, // destContract
-        uint256, // zetaAmount
-        bytes calldata message
-    ) external {
+    function onZetaMessage(ZetaInterfaces.ZetaMessage calldata _zetaMessage) external {
         require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
-        require(keccak256(srcContract) == keccak256(_crossChainAddress), "Cross-chain address doesn't match");
+        require(
+            keccak256(_zetaMessage.originSenderAddress) == keccak256(_crossChainAddress),
+            "Cross-chain address doesn't match"
+        );
 
         (
             bytes32 messageType,
@@ -117,26 +116,24 @@ contract CrossChainWarriors is ERC721("CrossChainWarriors", "CCWAR"), Ownable {
              * @dev this extra comma corresponds to address from
              */
             address to
-        ) = abi.decode(message, (bytes32, uint256, address, address));
+        ) = abi.decode(_zetaMessage.message, (bytes32, uint256, address, address));
 
         require(messageType == CROSS_CHAIN_TRANSFER_MESSAGE, "Invalid message type");
 
         _mintId(to, tokenId);
     }
 
-    function zetaMessageRevert(
-        bytes calldata srcContract,
-        string calldata, // destChainID,
-        string calldata, // destContract,
-        uint256, // zetaRefundAmount,
-        uint256, // gasLimit,
-        bytes calldata message,
-        bytes32 // messageID
-    ) external {
+    function onZetaRevert(ZetaInterfaces.ZetaRevert calldata _zetaRevert) external {
         require(msg.sender == _zetaMpiAddress, "This function can only be called by the Zeta MPI contract");
-        require(keccak256(srcContract) == keccak256(_crossChainAddress), "Cross-chain address doesn't match");
+        require(
+            keccak256(_zetaRevert.destinationAddress) == keccak256(_crossChainAddress),
+            "Cross-chain address doesn't match"
+        );
 
-        (bytes32 messageType, uint256 tokenId, address from) = abi.decode(message, (bytes32, uint256, address));
+        (bytes32 messageType, uint256 tokenId, address from) = abi.decode(
+            _zetaRevert.message,
+            (bytes32, uint256, address)
+        );
 
         require(messageType == CROSS_CHAIN_TRANSFER_MESSAGE, "Invalid message type");
 

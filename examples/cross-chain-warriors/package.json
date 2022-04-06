@@ -2,6 +2,8 @@
   "name": "@zetachain/cross-chain-warriors",
   "license": "MIT",
   "scripts": {
+    "compile": "npx hardhat compile",
+    "clean": "npx hardhat clean",
     "lint:fix": "npm run lint:js:fix && npm run lint:sol:fix",
     "lint:js:fix": "eslint --ext .js,.ts . --fix",
     "lint:js": "eslint --ext .js,.ts .",
@@ -10,5 +12,8 @@
     "lint": "npm run lint:js && npm run lint:sol",
     "test:watch": "echo You need to install `entr` to run this command && find contracts test -iname '*.sol' -o -iname '*.spec.ts' | entr -cnr npx hardhat test",
     "test": "npx hardhat test"
+  },
+  "dependencies": {
+    "@zetachain/contracts": "workspace:^"
   }
 }

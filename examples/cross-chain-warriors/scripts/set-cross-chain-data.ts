@@ -25,7 +25,7 @@ async function main() {
 
   console.log("Setting cross-chain id:", _networkVariables.crossChainId);
 
-  await (await crossChainWarriorsContract.setCrossChainID(_networkVariables.crossChainId)).wait();
+  await (await crossChainWarriorsContract.setCrossChainId(_networkVariables.crossChainId)).wait();
 }
 
 main().catch((error) => {

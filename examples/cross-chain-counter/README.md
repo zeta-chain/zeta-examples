@@ -4,4 +4,4 @@
 
 A simple cross-chain counter using [Zeta MPI](https://docs.staging.zetachain.com/reference/message-passing-api).
 
-<!-- @todo (lucas): deploy and document after changing MP interface and implementing zetaMessageRevert -->
+<!-- @todo (lucas): deploy and document after changing MP interface and implementing onZetaRevert -->
