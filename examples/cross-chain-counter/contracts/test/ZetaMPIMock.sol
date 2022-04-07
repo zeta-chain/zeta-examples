@@ -27,6 +27,7 @@ contract ZetaMPIMock is ZetaMPI {
 
     function callOnZetaRevert(
         address originSenderAddress,
+        uint256 originChainId,
         uint256 destinationChainId,
         bytes calldata destinationAddress,
         uint256 zetaAmount,
@@ -37,6 +38,7 @@ contract ZetaMPIMock is ZetaMPI {
             CrossChainCounter(originSenderAddress).onZetaRevert(
                 ZetaInterfaces.ZetaRevert({
                     originSenderAddress: originSenderAddress,
+                    originChainId: originChainId,
                     destinationAddress: destinationAddress,
                     destinationChainId: destinationChainId,
                     zetaAmount: zetaAmount,
