@@ -8,15 +8,18 @@ interface ZetaInterfaces {
     struct SendInput {
         uint256 destinationChainId;
         bytes destinationAddress;
+        /// @dev Total gas including the transactions on every chain
         uint256 gasLimit;
+        /// @dev An encoded, arbitrary message to be parsed by the destination contract
         bytes message;
+        /// @dev The amount of Zeta that you wanna send cross-chain, greater than or equal to 0
         uint256 zetaAmount;
+        /// @dev Optional parameters for the Zeta protocol
         bytes zetaParams;
     }
 
     /**
      * @dev Our Message Passing Interface will call your contract's onReceive using this interface
-     * onReceive will be called when a cross-chain message is delivered to your contract
      */
     struct ZetaMessage {
         bytes originSenderAddress;
@@ -28,7 +31,6 @@ interface ZetaInterfaces {
 
     /**
      * @dev Our Message Passing Interface will call your contract's onRevert using this interface
-     * onRevert will be called when a cross-chain message reverted and it's useful to recover to the original state
      */
     struct ZetaRevert {
         address originSenderAddress;
