@@ -19,7 +19,7 @@ interface ZetaInterfaces {
     }
 
     /**
-     * @dev Our Message Passing Interface will call your contract's onReceive using this interface
+     * @dev Our Message Passing Interface will call your contract's onZetaMessage using this interface
      */
     struct ZetaMessage {
         bytes originSenderAddress;
@@ -30,7 +30,7 @@ interface ZetaInterfaces {
     }
 
     /**
-     * @dev Our Message Passing Interface will call your contract's onRevert using this interface
+     * @dev Our Message Passing Interface will call your contract's onZetaRevert using this interface
      */
     struct ZetaRevert {
         address originSenderAddress;
