@@ -10,6 +10,7 @@ This example is currently deployed to [BSC Testnet](https://testnet.bscscan.com/
 
 ### Doing a cross-chain value transfer
 
+1. Get some [testnet Zeta](https://docs.zetachain.com/develop/get-testnet-zeta).
 1. Go to the [BSC Testnet Zeta token contract write methods](https://testnet.bscscan.com/address/0x6Cc37160976Bbd1AecB5Cce4C440B28e883c7898#writeContract).
 1. Connect with your wallet.
 1. Give allowance to the multi-chain value contract: `0x0E396e23cAD688c0e5252B20dFeAcC248b0d8B01`.
