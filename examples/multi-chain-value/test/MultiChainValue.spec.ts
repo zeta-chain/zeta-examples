@@ -1,17 +1,16 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { deployMultiChainValueMock, deployZetaMPIMock } from "../lib/MultiChainValue.helpers";
-import { MultiChainValueMock, ZetaMPIMock } from "../typechain";
+import { deployMultiChainValueMock, deployZetaEthMock, deployZetaMPIMock } from "../lib/MultiChainValue.helpers";
+import { MultiChainValueMock, ZetaEth, ZetaMPIMock } from "../typechain";
 
 describe("MultiChainValue tests", () => {
   let multiChainValueContractA: MultiChainValueMock;
   const chainAId = 1;
-
-  let multiChainValueContractB: MultiChainValueMock;
   const chainBId = 2;
 
   let zetaMPIMockContract: ZetaMPIMock;
+  let zetaEthMockContract: ZetaEth;
 
   let accounts: SignerWithAddress[];
   let deployer: SignerWithAddress;
@@ -21,15 +20,13 @@ describe("MultiChainValue tests", () => {
 
   beforeEach(async () => {
     zetaMPIMockContract = await deployZetaMPIMock();
+    zetaEthMockContract = await deployZetaEthMock();
     multiChainValueContractA = await deployMultiChainValueMock({
       zetaMPIMockAddress: zetaMPIMockContract.address,
-    });
-    multiChainValueContractB = await deployMultiChainValueMock({
-      zetaMPIMockAddress: zetaMPIMockContract.address,
+      zetaTokenMockAddress: zetaEthMockContract.address,
     });
 
     await multiChainValueContractA.addAvailableChainId(chainBId);
-    await multiChainValueContractB.addAvailableChainId(chainAId);
 
     accounts = await ethers.getSigners();
     [deployer, account1] = accounts;
