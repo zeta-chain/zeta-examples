@@ -1,0 +1,11 @@
+{
+  "bsctestnet": {
+    "multiChainValueAddress": "0x0000000000000000000000000000000000000000"
+  },
+  "goerli": {
+    "multiChainValueAddress": "0x0000000000000000000000000000000000000000"
+  },
+  "hardhat": {
+    "multiChainValueAddress": "0x0000000000000000000000000000000000000000"
+  }
+}

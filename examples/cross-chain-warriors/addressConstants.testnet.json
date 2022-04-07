@@ -1,9 +1,9 @@
 {
   "bsctestnet": {
-    "crossChainWarriorsAddress": "0xF980AcD629eFd34a4BAf43477839d5ff20fBA460"
+    "crossChainWarriorsAddress": "0xF3161666AaEd3716b12205Dc10A425a4BdBC9ce0"
   },
   "goerli": {
-    "crossChainWarriorsAddress": "0x16cA0D467B1f8379cD7882F35F0B3e36D767a251"
+    "crossChainWarriorsAddress": "0x241F17B6f190e485bA4B24768137Fa7166F0E925"
   },
   "hardhat": {
     "crossChainWarriorsAddress": "0x0000000000000000000000000000000000000000"

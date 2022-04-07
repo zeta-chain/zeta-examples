@@ -247,7 +247,8 @@ describe("CrossChainWarriors tests", () => {
 
       await zetaMPIMockContract.callOnZetaRevert(
         crossChainWarriorsContractChainA.address,
-        1,
+        1337,
+        chainBId,
         encoder.encode(["address"], [crossChainWarriorsContractChainB.address]),
         0,
         2500000,
