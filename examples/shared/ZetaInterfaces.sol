@@ -6,7 +6,9 @@ interface ZetaInterfaces {
      * @dev Use SendInput to interact with our Message Passing Interface: zeta.send(SendInput)
      */
     struct SendInput {
+        /// @dev More about chain ids https://docs.zetachain.com/learn/glossary#chain-id
         uint256 destinationChainId;
+        /// @dev Expressed in bytes since it can be non-EVM
         bytes destinationAddress;
         /// @dev Total gas including the transactions on every chain
         uint256 gasLimit;
