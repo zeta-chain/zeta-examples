@@ -73,7 +73,7 @@ export const deployZetaMPIMock = async () => {
 };
 
 export const deployZetaEthMock = async () => {
-  const Factory = (await ethers.getContractFactory("ZetaEthMock")) as ZetaEth__factory;
+  const Factory = (await ethers.getContractFactory("ZetaEth")) as ZetaEth__factory;
 
   const zetaMPIMockContract = (await Factory.deploy(100_000)) as ZetaEth;
 

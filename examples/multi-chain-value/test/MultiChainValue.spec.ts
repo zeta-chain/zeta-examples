@@ -100,7 +100,8 @@ describe("MultiChainValue tests", () => {
     describe("Given a valid input", () => {
       it("Should send value", async () => {
         await (await multiChainValueContractA.addAvailableChainId(1)).wait();
-
+        
+        await zetaEthMockContract.approve(multiChainValueContractA.address, 100_000);
         await multiChainValueContractA.send(1, account1Address, 100_000);
 
         /**
